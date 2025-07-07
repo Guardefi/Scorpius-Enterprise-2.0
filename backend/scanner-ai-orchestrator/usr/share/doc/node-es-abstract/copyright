@@ -1,0 +1,86 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: es-abstract
+Upstream-Contact: https://github.com/ljharb/es-abstract/issues
+Source: https://github.com/ljharb/es-abstract#readme
+ https://github.com/ljharb/object.assign/tags
+ https://github.com/es-shims/String.prototype.trimEnd/tags
+ https://github.com/es-shims/String.prototype.trimStart/tags
+ https://registry.npmjs.org/@types/es-abstract
+ https://github.com/ljharb/is-negative-zero/tags
+ https://github.com/ljharb/unbox-primitive/tags
+ https://github.com/ljharb/es-value-fixtures/tags
+ https://github.com/ljharb/make-async-function/tags
+ https://github.com/inspect-js/get-symbol-description/tags
+ https://github.com/ljharb/internal-slot/tags
+ https://github.com/inspect-js/is-shared-array-buffer/tags
+ https://github.com/inspect-js/is-weakref/tags
+ https://github.com/es-shims/Function.prototype.name/tags
+ https://github.com/inspect-js/functions-have-names/tags
+ https://github.com/inspect-js/has-property-descriptors/tags
+ https://github.com/paulmillr/Array.prototype.find/tags
+ https://github.com/ljharb/es-shim-unscopables/tags
+ https://github.com/ljharb/intl-fallback-symbol/tags
+ https://github.com/ljharb/safe-regex-test/tags
+ https://github.com/manuelstofer/foreach/tags
+
+Files: *
+Copyright: 2013-2022 Jordan Harband <ljharb@gmail.com>
+License: Expat
+
+Files: array-prototype-find/*
+Copyright: 2019 Paul Miller <https://paulmillr.com>
+License: Expat
+
+Files: debian/*
+Copyright: 2018 Pirate Praveen <praveen@debian.org>
+ 2020-2022 Yadd <yadd@debian.org>
+License: Expat
+
+Files: debian/tests/test_modules/*
+Copyright: 2014-2021 Jordan Harband
+License: Expat
+
+Files: debian/tests/test_modules/array.prototype.indexof/*
+Copyright: 2020 ECMAScript Shims
+License: Expat
+
+Files: foreach/*
+Copyright: 2013 Manuel Stofer
+License: Expat
+
+Files: get-symbol-description/*
+ has-property-descriptors/*
+ is-shared-array-buffer/*
+ is-weakref/*
+Copyright: 2020-2021 Inspect JS
+License: Expat
+
+Files: stringprototypetrimend/*
+ stringprototypetrimstart/*
+Copyright: 2017 Khaled Al-Ansari
+License: Expat
+
+Files: types-es-abstract/*
+Copyright: Microsoft Corporation
+License: Expat
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person
+ obtaining a copy of this software and associated documentation files
+ (the "Software"), to deal in the Software without restriction,
+ including without limitation the rights to use, copy, modify, merge,
+ publish, distribute, sublicense, and/or sell copies of the Software,
+ and to permit persons to whom the Software is furnished to do so,
+ subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.

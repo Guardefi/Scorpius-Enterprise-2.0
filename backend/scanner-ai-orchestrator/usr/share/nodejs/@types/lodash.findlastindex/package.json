@@ -1,0 +1,36 @@
+{
+    "name": "@types/lodash.findlastindex",
+    "version": "4.6.6",
+    "description": "TypeScript definitions for lodash.findLastIndex",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Brian Zengel",
+            "url": "https://github.com/bczengel",
+            "githubUsername": "bczengel"
+        },
+        {
+            "name": "Ilya Mochalov",
+            "url": "https://github.com/chrootsu",
+            "githubUsername": "chrootsu"
+        },
+        {
+            "name": "Stepan Mikhaylyuk",
+            "url": "https://github.com/stepancar",
+            "githubUsername": "stepancar"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/lodash.findlastindex"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/lodash": "*"
+    },
+    "typesPublisherContentHash": "f7335581d3691ae8a607ca69afbc5d465da9b8bc23a7520ad4cd34d4bd80bb76",
+    "typeScriptVersion": "2.8"
+}

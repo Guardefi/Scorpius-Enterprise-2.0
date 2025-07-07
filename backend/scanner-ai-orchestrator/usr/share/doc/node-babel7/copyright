@@ -1,0 +1,365 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: babel-types
+Upstream-Contact: Sebastian McKenzie <sebmck@gmail.com>
+Source: https://babeljs.io/
+ https://github.com/xtuc/charcodes/tags
+ https://github.com/ariporad/pirates/tags
+ https://github.com/jamestalmage/node-modules-regexp/tags
+ https://github.com/gustf/js-levenshtein/tags?after=1.1.6
+ https://registry.npmjs.org/@babel/preset-modules
+ https://github.com/airbnb/babel-plugin-dynamic-import-node/tags
+ https://registry.npmjs.org/gensync
+ https://registry.npmjs.org/@babel/plugin-syntax-export-namespace-from
+ https://registry.npmjs.org/@babel/plugin-syntax-object-rest-spread
+ https://registry.npmjs.org/@babel/plugin-syntax-async-generators
+ https://registry.npmjs.org/@babel/plugin-syntax-dynamic-import
+ https://registry.npmjs.org/@babel/plugin-syntax-json-strings
+ https://registry.npmjs.org/@babel/plugin-syntax-logical-assignment-operators
+ https://registry.npmjs.org/@babel/plugin-syntax-nullish-coalescing-operator
+ https://registry.npmjs.org/@babel/plugin-syntax-numeric-separator
+ https://registry.npmjs.org/@babel/plugin-syntax-optional-catch-binding
+ https://registry.npmjs.org/@babel/plugin-syntax-optional-chaining
+ https://github.com/nicolo-ribaudo/babel-preset-current-node-syntax/tags
+ https://registry.npmjs.org/@babel/plugin-syntax-bigint
+ https://registry.npmjs.org/@types/babel__core
+ https://registry.npmjs.org/@types/babel__code-frame
+ https://registry.npmjs.org/@types/babel__generator
+ https://registry.npmjs.org/@types/babel__preset-env
+ https://registry.npmjs.org/@types/babel__standalone
+ https://registry.npmjs.org/@types/babel__template
+ https://registry.npmjs.org/@types/babel__traverse
+ https://registry.npmjs.org/@types/babel-types
+ https://registry.npmjs.org/@babel/plugin-syntax-import-meta
+ https://registry.npmjs.org/@babel/plugin-syntax-class-properties
+ https://registry.npmjs.org/@babel/plugin-syntax-class-static-block
+ https://registry.npmjs.org/@babel/plugin-syntax-private-property-in-object
+ https://registry.npmjs.org/@babel/plugin-syntax-top-level-await
+ https://github.com/newoga/babel-plugin-transform-replace-object-assign/tags
+ https://github.com/airbnb/babel-preset-airbnb/tags
+ https://github.com/babel/preset-modules/tags
+ https://registry.npmjs.org/@babel/helper-bindify-decorators
+ https://registry.npmjs.org/@babel/helper-call-delegate
+ https://registry.npmjs.org/@babel/helper-explode-class
+ https://registry.npmjs.org/@babel/plugin-syntax-module-string-names
+ https://github.com/Andarist/babel-check-duplicated-nodes/tags
+Files-Excluded: .yarn .vscode .circleci .codesandbox .git*
+
+Files: *
+Copyright: 2014-present, Sebastian McKenzie <sebmck@gmail.com>
+License: Expat
+
+Files: babel-plugin-dynamic-import-node/*
+ babel-preset-airbnb/*
+Copyright: 2015-2016 Airbnb
+License: Expat
+
+Files: babel-plugin-transform-replace-object-assign/*
+Copyright: Neil Gabbadon <neil.gabbadon@gmail.com>
+License: Expat
+
+Files: babel-preset-modules/*
+Copyright: 2020 Babel
+License: Expat
+
+Files: benchmark/babel-generator/real-case/jquery*
+Copyright: OpenJS Foundation and other contributors
+License: Expat
+
+Files: debian/*
+Copyright: 2016, Pirate Praveen <praveen@debian.org>
+ 2019-2022, Yadd <yadd@debian.org>
+License: Expat
+
+Files: debian/build_modules/assign-symbols/*
+Copyright: 2015 Jon Schlinkert
+License: Expat
+
+Files: debian/build_modules/buffer-es6/*
+Copyright: Feross Aboukhadijeh, and other contributors
+License: Expat
+
+Files: debian/build_modules/duplicate-package-checker-webpack-plugin/*
+Copyright: 2017, Darren Scerri
+License: Expat
+
+Files: debian/build_modules/es6-templates/*
+Copyright: 2014, Square Inc.
+License: Apache-2.0
+
+Files: debian/build_modules/find-root/*
+Copyright: 2027, jsdnxx
+License: Expat
+
+Files: debian/build_modules/gulp-filter/*
+Copyright: Sindre Sorhus <sindresorhus@gmail.com>
+License: Expat
+
+Files: debian/build_modules/gulp-uglify/*
+Copyright: 2013-2017, Terin Stock <terinjokes@gmail.com>
+License: Expat
+
+Files: debian/build_modules/html-loader/*
+Copyright: JS Foundation and other contributors
+License: Expat
+
+Files: debian/build_modules/html-minifier/*
+Copyright: 2010-2018, Juriy "kangax" Zaytsev
+License: Expat
+
+Files: debian/build_modules/html-minifier/cli.js
+Copyright: 2014-2016, Zoltan Frombach
+License: Expat
+
+Files: debian/build_modules/import-meta-resolve/*
+Copyright: 2021 Titus Wormer <tituswormer@gmail.com>
+License: Expat
+Comment: This is a derivative work based on: https://github.com/nodejs/node
+ Copyright: Node.js contributors
+ License: Expat
+
+Files: debian/build_modules/make-error-cause/*
+Copyright: 2015, Blake Embrey
+License: Apache-2.0
+
+Files: debian/build_modules/process-es6/*
+Copyright: 2013 Roman Shtylman <shtylman@gmail.com>
+License: Expat
+
+Files: debian/build_modules/relateurl/*
+Copyright: Steven Vachon <contact@svachon.com>
+License: Expat
+
+Files: debian/build_modules/rollup-plugin-*/*
+Copyright: Joyent, Inc. and other Node contributors
+License: Expat
+
+Files: debian/build_modules/rollup-plugin-node-builtins/src/es6/assert.js
+Copyright: 2009 Thomas Robinson <280north.com>
+License: Expat
+
+Files: debian/build_modules/rollup-plugin-node-builtins/src/es6/domain.js
+Copyright: 2013-present Bevry Pty Ltd <https://bevry.me>
+License: Expat
+
+Files: debian/build_modules/rollup-plugin-node-builtins/src/es6/http-lib/to-arraybuffer.js
+Copyright: 2016 John Hiesey
+License: Expat
+
+Files: debian/build_modules/rollup-plugin-node-builtins/src/es6/http.js
+Copyright: 2015 John Hiesey
+License: Expat
+
+Files: debian/build_modules/rollup-plugin-node-builtins/src/es6/os.js
+Copyright: 2016 CoderPuppy
+License: Expat
+
+Files: debian/build_modules/rollup-plugin-node-builtins/src/es6/setimmediate.js
+Copyright: 2012 Barnesandnoble.com
+ 2012 llc
+ 2012 Donavon West
+ 2012 Domenic Denicola
+License: Expat
+
+Files: debian/build_modules/rollup-plugin-node-builtins/src/es6/vm.js
+Copyright: substack
+License: Expat
+
+Files: debian/build_modules/rollup-plugin-node-builtins/src/es6/zlib-lib/*
+Copyright: 2014-2016 by Vitaly Puzrin
+License: Expat
+
+Files: debian/build_modules/streamfilter/*
+Copyright: 2013-2014, Nicolas Froidure <https://insertafter.com/>
+License: Expat
+
+Files: debian/build_modules/@types/*
+Copyright: Microsoft Corporation
+License: Expat
+
+Files: debian/build_modules/warnings-to-errors-webpack-plugin/*
+Copyright: 2018, Taehwan, No
+License: Expat
+
+Files: debian/build_modules/webpack-dependency-suite/*
+Copyright: 2016, Bazyli Brzóska
+License: Expat
+
+Files: debian/build_modules/webpack-stream/*
+Copyright: 2018, Kyle Robinson Young
+License: Expat
+
+Files: eslint/babel-eslint-plugin/*
+Copyright: 2014-2015 Jason Quense <jason@quense.me>
+License: Expat
+
+Files: gensync/*
+Copyright: Logan Smyth <loganfsmyth@gmail.com>
+License: Expat
+
+Files: js-levenshtein/*
+Copyright: 2017 Gustaf Andersson
+License: Expat
+
+Files: node-modules-regexp/*
+Copyright: James Talmage <james@talmage.io>
+License: Expat
+
+Files: packages/babel-generator/test/fixtures/comments/*
+Copyright: 2012, Yusuke Suzuki <utatane.tea@gmail.com>
+License: BSD-2-Clause
+
+Files: packages/babel-parser/*
+Copyright: 2012-2014 , Acorn contributors
+ 2012-2014, Adrian Rakovsky
+ 2012-2014, Alistair Braidwood
+ 2012-2014, Andres Suarez
+ 2012-2014, Aparajita Fishman
+ 2012-2014, Arian Stolwijk
+ 2012-2014, Artem Govorov
+ 2012-2014, Brandon Mills
+ 2012-2014, Charles Hughes
+ 2012-2014, Conrad Irwin
+ 2012-2014, David Bonnet
+ 2012-2014, Forbes Lindesay
+ 2012-2014, Gilad Peleg
+ 2012-2014, impinball
+ 2012-2014, Ingvar Stepanyan
+ 2012-2014, Jesse McCarthy
+ 2012-2014, Jiaxing Wang
+ 2012-2014, Joel Kemp
+ 2012-2014, Johannes Herr
+ 2012-2014, Jürg Lehni
+ 2012-2014, keeyipchan
+ 2012-2014, Kevin Kwok
+ 2012-2014, krator
+ 2012-2014, Marijn Haverbeke
+ 2012-2014, Martin Carlberg
+ 2012-2014, Mathias Bynens
+ 2012-2014, Mathieu 'p01' Henri
+ 2012-2014, Max Schaefer
+ 2012-2014, Max Zerzouri
+ 2012-2014, Mihai Bazon
+ 2012-2014, Mike Rennie
+ 2012-2014, Nick Fitzgerald
+ 2012-2014, Oskar Schöldström
+ 2012-2014, Paul Harper
+ 2012-2014, Peter Rust
+ 2012-2014, PlNG
+ 2012-2014, r-e-d
+ 2012-2014, Rich Harris
+ 2012-2014, Sebastian McKenzie
+ 2012-2014, zsjforcn
+License: Expat
+
+Files: packages/babel-parser/test/expressions/esprima/*
+ packages/babel-parser/test/fixtures/esprima/*
+Copyright: jQuery Foundation, Inc. and Contributors
+License: BSD-2-Clause
+
+Files: packages/babel-plugin-proposal-class-properties/test/*/private/declaration-order/*
+Copyright: 2012-2013, Ecma International
+License: BSD-3-Clause
+
+Files: packages/babel-plugin-proposal-record-and-tuple/src/*
+Copyright: 2020 Bloomberg Finance L.P.
+License: Expat
+
+Files: packages/babel-plugin-transform-object-assign/*
+Copyright: 2015, Jed Watson
+License: Expat
+
+Files: packages/babel-standalone/src/transformScriptTags.ts
+Copyright: 2013-2015, Facebook Inc.
+License: BSD-2-Clause
+
+Files: pirates/*
+Copyright: 2016-2018 Ari Porad
+License: Expat
+
+Files: types-*/*
+Copyright: Microsoft Corporation
+License: Expat
+
+License: Apache-2.0
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ .
+ https://www.apache.org/licenses/LICENSE-2.0
+ .
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ .
+ On Debian systems, the complete text of the Apache version 2.0 license
+ can be found in "/usr/share/common-licenses/Apache-2.0".
+
+License: BSD-2-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are
+ met:
+ .
+  * Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ .
+  * Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDER “AS IS” AND ANY
+ EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER BE
+ LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+ BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: BSD-3-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions are met:
+  1. Redistributions of source code must retain the above copyright notice,
+     this list of conditions and the following disclaimer.
+  2. Redistributions in binary form must reproduce the above copyright notice,
+     this list of conditions and the following disclaimer in the documentation
+     and/or other materials provided with the distribution.
+  3. Neither the name of the authors nor Ecma International may be used to
+     endorse or promote products derived from this software without specific
+     prior written permission.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE ECMA INTERNATIONAL "AS IS" AND ANY EXPRESS OR
+ IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO
+ EVENT SHALL ECMA INTERNATIONAL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+ OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person
+ obtaining a copy of this software and associated documentation files
+ (the "Software"), to deal in the Software without restriction,
+ including without limitation the rights to use, copy, modify, merge,
+ publish, distribute, sublicense, and/or sell copies of the Software,
+ and to permit persons to whom the Software is furnished to do so,
+ subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.

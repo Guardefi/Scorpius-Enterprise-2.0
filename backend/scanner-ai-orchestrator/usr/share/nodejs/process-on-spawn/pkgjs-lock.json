@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "nyc":{
+   "version":"15.1.0"
+  },
+  "tap-mocha-reporter":{
+   "version":"3.0.6"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"process-on-spawn",
+ "packages":{
+  "":{
+   "name":"process-on-spawn",
+   "version":"1.0.0"
+  },
+  "/usr/share/nodejs/tap-mocha-reporter":{
+   "name":"tap-mocha-reporter",
+   "version":"3.0.6"
+  },
+  "node_modules/nyc":{
+   "name":"nyc",
+   "version":"15.1.0"
+  }
+ },
+ "pkgjs_version":"0.11.7",
+ "version":"1.0.0"
+}

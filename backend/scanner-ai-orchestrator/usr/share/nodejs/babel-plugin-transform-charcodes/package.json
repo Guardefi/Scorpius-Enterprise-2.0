@@ -1,0 +1,37 @@
+{
+  "name": "babel-plugin-transform-charcodes",
+  "version": "0.2.0",
+  "description": "Replace charcodes AOT",
+  "main": "lib/index.js",
+  "module": "lib/index.mjs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xtuc/charcodes.git"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "keywords": [
+    "charcodes",
+    "ascii",
+    "constants",
+    "babel-plugin"
+  ],
+  "author": "Sven Sauleau",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xtuc/charcodes/issues"
+  },
+  "homepage": "https://github.com/xtuc/charcodes#readme",
+  "devDependencies": {
+    "@babel/types": "^7.0.0",
+    "charcodes": "^0.2.0"
+  },
+  "dependencies": {
+    "@babel/parser": "^7.0.0",
+    "@babel/traverse": "^7.0.0"
+  },
+  "peerDependencies": {
+    "charcodes": "^0.2.0"
+  }
+}

@@ -1,0 +1,1 @@
+../../javascript/typedarray-to-buffer/index.min.js

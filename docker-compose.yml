@@ -1,0 +1,548 @@
+version: '3.8'
+
+services:
+  # Database services
+  postgres:
+    image: postgres:15
+    container_name: scorpius-postgres
+    environment:
+      POSTGRES_DB: scorpius
+      POSTGRES_USER: scorpius
+      POSTGRES_PASSWORD: scorpius_secure_2024
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - scorpius-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: scorpius-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - scorpius-network
+
+  # Monitoring stack
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: scorpius-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.enable-lifecycle'
+    networks:
+      - scorpius-network
+
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    container_name: scorpius-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - scorpius-network
+
+  # Core microservices
+  api-gateway:
+    build: ./services/api-gateway
+    container_name: scorpius-api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://scorpius:scorpius_secure_2024@postgres:5432/scorpius
+      - REDIS_URL=redis://redis:6379
+      - PROMETHEUS_ENABLED=true
+    depends_on:
+      - postgres
+      - redis
+      - prometheus
+    networks:
+      - scorpius-network
+
+  bridge-service:
+    build: ./services/bridge-service
+    container_name: scorpius-bridge
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://scorpius:scorpius_secure_2024@postgres:5432/scorpius
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - scorpius-network
+
+  quantum-service:
+    build: ./services/quantum
+    container_name: scorpius-quantum
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql://scorpius:scorpius_secure_2024@postgres:5432/scorpius
+    depends_on:
+      - postgres
+    networks:
+      - scorpius-network
+
+  reporting-service:
+    build: ./services/reporting
+    container_name: scorpius-reporting
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://scorpius:scorpius_secure_2024@postgres:5432/scorpius
+    depends_on:
+      - postgres
+    networks:
+      - scorpius-network
+
+  time-machine-service:
+    build: ./services/time-machine
+    container_name: scorpius-time-machine
+    ports:
+      - "8004:8004"
+    environment:
+      - DATABASE_URL=postgresql://scorpius:scorpius_secure_2024@postgres:5432/scorpius
+    depends_on:
+      - postgres
+    networks:
+      - scorpius-network
+
+  # Core orchestrator
+  core-orchestrator:
+    build: ./packages/core
+    container_name: scorpius-core
+    ports:
+      - "8005:8005"
+    environment:
+      - DATABASE_URL=postgresql://scorpius:scorpius_secure_2024@postgres:5432/scorpius
+      - REDIS_URL=redis://redis:6379
+      - API_GATEWAY_URL=http://api-gateway:8000
+    depends_on:
+      - postgres
+      - redis
+      - api-gateway
+    networks:
+      - scorpius-network
+
+  # Frontend (Vite/React)
+  frontend:
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: scorpius-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+      - VITE_WS_URL=ws://localhost:8000/ws
+    depends_on:
+      - api-gateway
+    networks:
+      - scorpius-network
+
+networks:
+  scorpius-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  prometheus_data:
+  grafana_data:
+  settings-service:
+    build: ./backend/settings-service
+    ports:
+      - "8022:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  # =============================================================================
+  # MEMPOOL & BLOCKCHAIN SERVICES
+  # =============================================================================
+
+  mempool-service:
+    build: ./backend/mempool-service
+    ports:
+      - "8030:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - ETH_RPC_URL=${ETH_RPC_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  bytecode-service:
+    build: ./backend/bytecode-service
+    ports:
+      - "8031:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  bridge-service:
+    build: ./backend/bridge-service
+    ports:
+      - "8032:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  # =============================================================================
+  # MEV & SECURITY SERVICES
+  # =============================================================================
+
+  mev-bot-service:
+    build: ./backend/mev-bot-service
+    ports:
+      - "8040:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - ETH_RPC_URL=${ETH_RPC_URL}
+      - PRIVATE_KEY=${PRIVATE_KEY}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  mev-protection-service:
+    build: ./backend/mev-protection-service
+    ports:
+      - "8041:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  honeypot-service:
+    build: ./backend/honeypot-service
+    ports:
+      - "8042:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  wallet-guard-service:
+    build: ./backend/wallet-guard-service
+    ports:
+      - "8043:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  # =============================================================================
+  # QUANTUM & ADVANCED SERVICES
+  # =============================================================================
+
+  quantum-service:
+    build: ./backend/quantum-service
+    ports:
+      - "8050:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  quantum-crypto-service:
+    build: ./backend/quantum-crypto-service
+    ports:
+      - "8051:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  simulation-service:
+    build: ./backend/simulation-service
+    ports:
+      - "8052:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  ai-forensics-service:
+    build: ./backend/ai-forensics-service
+    ports:
+      - "8053:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  exploit-testing-service:
+    build: ./backend/exploit-testing-service
+    ports:
+      - "8054:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  integration-hub:
+    build: ./backend/integration-hub
+    ports:
+      - "8055:8000"
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - LOG_LEVEL=${LOG_LEVEL}
+    depends_on:
+      - db
+      - redis
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  # =============================================================================
+  # FRONTEND
+  # =============================================================================
+
+  frontend:
+    build: ./backend/frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL}
+      - VITE_WS_BASE_URL=${VITE_WS_BASE_URL}
+      - VITE_APP_TITLE=${VITE_APP_TITLE}
+    depends_on:
+      - api-gateway
+    networks:
+      - scorpius-net
+    restart: unless-stopped
+
+  # =============================================================================
+  # INFRASTRUCTURE SERVICES
+  # =============================================================================
+
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./scripts/init-multiple-databases.sh:/docker-entrypoint-initdb.d/init-multiple-databases.sh
+    networks:
+      - scorpius-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 30s
+      retries: 3
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - scorpius-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 30s
+      retries: 3
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23
+    command: ["start-dev"]
+    restart: unless-stopped
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "8090:8080"
+    depends_on:
+      - db
+    networks:
+      - scorpius-net
+
+  # =============================================================================
+  # MANAGEMENT TOOLS
+  # =============================================================================
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "8083:80"
+    depends_on:
+      - db
+    networks:
+      - scorpius-net
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+  redis-commander:
+    image: ghcr.io/joeferner/redis-commander:latest
+    restart: unless-stopped
+    environment:
+      - REDIS_HOSTS=local:redis:6379:0:${REDIS_PASSWORD}
+    ports:
+      - "8084:8081"
+    depends_on:
+      - redis
+    networks:
+      - scorpius-net
+
+  # =============================================================================
+  # MONITORING TOOLS
+  # =============================================================================
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: scorpius-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--web.enable-lifecycle'
+    networks:
+      - scorpius-network
+
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    container_name: scorpius-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    networks:
+      - scorpius-network
+
+  # Custom Dashboard API (for your Tailwind/Vite frontend)
+  dashboard-api:
+    build: ./backend/dashboard
+    container_name: scorpius-dashboard-api
+    ports:
+      - "8001:8001"
+    environment:
+      - PROMETHEUS_URL=http://prometheus:9090
+      - GRAFANA_URL=http://grafana:3000
+    networks:
+      - scorpius-network
+    depends_on:
+      - prometheus
+      - grafana
+
+networks:
+  scorpius-net:
+    driver: bridge
+  scorpius-network:
+    driver: bridge
+
+volumes:
+  db_data:
+  redis_data:
+  pgadmin_data:
+  time_machine_data:
+  reporting_data:
+  prometheus_data:
+  grafana_data:

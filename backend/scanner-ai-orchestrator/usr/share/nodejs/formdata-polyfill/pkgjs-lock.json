@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "@types/node":{
+   "version":"18.11.9"
+  },
+  "fetch-blob":{
+   "version":"3.1.5"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"formdata-polyfill",
+ "packages":{
+  "":{
+   "name":"formdata-polyfill",
+   "version":"4.0.6"
+  },
+  "node_modules/@types/node":{
+   "name":"@types/node",
+   "version":"18.11.9"
+  },
+  "node_modules/fetch-blob":{
+   "name":"fetch-blob",
+   "version":"3.1.5"
+  }
+ },
+ "pkgjs_version":"0.15.11",
+ "version":"4.0.6"
+}

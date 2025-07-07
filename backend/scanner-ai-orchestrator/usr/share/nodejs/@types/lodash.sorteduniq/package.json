@@ -1,0 +1,36 @@
+{
+    "name": "@types/lodash.sorteduniq",
+    "version": "4.2.6",
+    "description": "TypeScript definitions for lodash.sortedUniq",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Brian Zengel",
+            "url": "https://github.com/bczengel",
+            "githubUsername": "bczengel"
+        },
+        {
+            "name": "Ilya Mochalov",
+            "url": "https://github.com/chrootsu",
+            "githubUsername": "chrootsu"
+        },
+        {
+            "name": "Stepan Mikhaylyuk",
+            "url": "https://github.com/stepancar",
+            "githubUsername": "stepancar"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/lodash.sorteduniq"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/lodash": "*"
+    },
+    "typesPublisherContentHash": "ec4b8fda574b4bfda2e83fcd5356548e33d872c0686c114c9318d978bfe5613f",
+    "typeScriptVersion": "2.8"
+}

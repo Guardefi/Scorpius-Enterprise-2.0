@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "@babel/types":{
+   "version":"7.20.7"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@babel/helper-annotate-as-pure",
+ "packages":{
+  "":{
+   "name":"@babel/helper-annotate-as-pure",
+   "version":"7.18.6"
+  },
+  "node_modules/@babel/types":{
+   "name":"@babel/types",
+   "version":"7.20.7"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"7.18.6"
+}

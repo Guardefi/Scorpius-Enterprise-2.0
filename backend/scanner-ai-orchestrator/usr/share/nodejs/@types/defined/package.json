@@ -1,0 +1,22 @@
+{
+    "name": "@types/defined",
+    "version": "1.0.0",
+    "description": "TypeScript definitions for defined",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "BendingBender",
+            "url": "https://github.com/BendingBender"
+        }
+    ],
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "peerDependencies": {},
+    "typesPublisherContentHash": "3909df1d05c20aaa6447a2bcbaf2b63339d991240adfc8c1d802d3b726611389",
+    "typeScriptVersion": "2.0"
+}

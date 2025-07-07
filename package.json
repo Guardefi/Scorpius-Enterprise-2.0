@@ -1,0 +1,21 @@
+{
+  "name": "scorpius-full-stack",
+  "version": "1.4.0",
+  "description": "Scorpius integrated microservices with monitoring and custom dashboard",
+  "scripts": {
+    "start": "docker-compose up --build",
+    "dev": "docker-compose up --build -d && npm run frontend:dev",
+    "stop": "docker-compose down",
+    "monitor": "docker-compose up prometheus grafana -d",
+    "frontend:dev": "cd frontend && npm run dev",
+    "electron:dev": "cd electron && npm run dev",
+    "build": "docker-compose build",
+    "logs": "docker-compose logs -f"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "dependencies": {
+    "lucide-react": "^0.525.0"
+  }
+}

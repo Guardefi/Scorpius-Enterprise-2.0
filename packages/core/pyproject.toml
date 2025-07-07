@@ -1,0 +1,11 @@
+[project]
+name = "core"
+version = "0.0.0"
+description = "Scorpius core models package"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["."]            # search in current directory
+include = ["core*"]      # include all packages starting with "core"
+namespaces = false       # we want a normal (non-namespace) pkg

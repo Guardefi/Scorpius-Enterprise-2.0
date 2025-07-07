@@ -1,0 +1,36 @@
+{
+    "name": "@types/lodash.sortedindexof",
+    "version": "4.1.6",
+    "description": "TypeScript definitions for lodash.sortedIndexOf",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Brian Zengel",
+            "url": "https://github.com/bczengel",
+            "githubUsername": "bczengel"
+        },
+        {
+            "name": "Ilya Mochalov",
+            "url": "https://github.com/chrootsu",
+            "githubUsername": "chrootsu"
+        },
+        {
+            "name": "Stepan Mikhaylyuk",
+            "url": "https://github.com/stepancar",
+            "githubUsername": "stepancar"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/lodash.sortedindexof"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/lodash": "*"
+    },
+    "typesPublisherContentHash": "49c660a8c902b2fb98d9214c46fc3a0eeed7a353571bc5e724a5555f62a8668b",
+    "typeScriptVersion": "2.8"
+}

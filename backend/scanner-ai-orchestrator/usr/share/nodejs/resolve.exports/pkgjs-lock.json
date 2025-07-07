@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "bundt":{
+   "version":"1.1.5"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"resolve.exports",
+ "packages":{
+  "":{
+   "name":"resolve.exports",
+   "version":"1.1.0"
+  },
+  "/usr/share/nodejs/bundt":{
+   "name":"bundt",
+   "version":"1.1.5"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"1.1.0"
+}

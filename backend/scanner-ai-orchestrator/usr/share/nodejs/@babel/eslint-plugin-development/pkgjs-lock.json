@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "eslint":{
+   "version":"6.4.0"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@babel/eslint-plugin-development",
+ "packages":{
+  "":{
+   "name":"@babel/eslint-plugin-development",
+   "version":"7.19.1"
+  },
+  "node_modules/eslint":{
+   "name":"eslint",
+   "version":"6.4.0"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"7.19.1"
+}

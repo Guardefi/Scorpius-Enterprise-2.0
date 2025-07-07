@@ -1,0 +1,36 @@
+{
+    "name": "@types/lodash.isfinite",
+    "version": "3.3.6",
+    "description": "TypeScript definitions for lodash.isFinite",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Brian Zengel",
+            "url": "https://github.com/bczengel",
+            "githubUsername": "bczengel"
+        },
+        {
+            "name": "Ilya Mochalov",
+            "url": "https://github.com/chrootsu",
+            "githubUsername": "chrootsu"
+        },
+        {
+            "name": "Stepan Mikhaylyuk",
+            "url": "https://github.com/stepancar",
+            "githubUsername": "stepancar"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/lodash.isfinite"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/lodash": "*"
+    },
+    "typesPublisherContentHash": "4703f6cf4f0864bc9b40a3e7920014c5a23cb87f8f9e0c2d61e5b942b6c2fd25",
+    "typeScriptVersion": "2.8"
+}

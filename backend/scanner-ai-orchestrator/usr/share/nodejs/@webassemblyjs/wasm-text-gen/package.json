@@ -1,0 +1,37 @@
+{
+  "name": "@webassemblyjs/wasm-text-gen",
+  "version": "1.11.3",
+  "description": "Emit documentation/code for your WASM binary Edit",
+  "keywords": [
+    "webassembly",
+    "javascript",
+    "wasm",
+    "binary",
+    "markdown"
+  ],
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtuc/webassemblyjs.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "author": "Sven Sauleau",
+  "license": "MIT",
+  "bin": {
+    "wasmgen": "lib/cli.js"
+  },
+  "dependencies": {
+    "@babel/generator": "^7.0.0-beta.40",
+    "@babel/template": "^7.0.0-beta.40",
+    "@babel/types": "^7.0.0-beta.40",
+    "@webassemblyjs/ast": "1.11.3",
+    "@webassemblyjs/wasm-parser": "1.11.3",
+    "commander": "^2.14.1"
+  }
+}

@@ -1,0 +1,35 @@
+{
+ "dependencies":{
+  "glob":{
+   "version":"7.1.7"
+  },
+  "nyc":{
+   "version":"15.1.0"
+  },
+  "process-on-spawn":{
+   "version":"1.0.0"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"node-preload",
+ "packages":{
+  "":{
+   "name":"node-preload",
+   "version":"0.2.1"
+  },
+  "/usr/share/nodejs/glob":{
+   "name":"glob",
+   "version":"7.1.7"
+  },
+  "node_modules/nyc":{
+   "name":"nyc",
+   "version":"15.1.0"
+  },
+  "node_modules/process-on-spawn":{
+   "name":"process-on-spawn",
+   "version":"1.0.0"
+  }
+ },
+ "pkgjs_version":"0.11.7",
+ "version":"0.2.1"
+}

@@ -1,0 +1,36 @@
+{
+    "name": "@types/lodash.findlastkey",
+    "version": "4.7.6",
+    "description": "TypeScript definitions for lodash.findLastKey",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Brian Zengel",
+            "url": "https://github.com/bczengel",
+            "githubUsername": "bczengel"
+        },
+        {
+            "name": "Ilya Mochalov",
+            "url": "https://github.com/chrootsu",
+            "githubUsername": "chrootsu"
+        },
+        {
+            "name": "Stepan Mikhaylyuk",
+            "url": "https://github.com/stepancar",
+            "githubUsername": "stepancar"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/lodash.findlastkey"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/lodash": "*"
+    },
+    "typesPublisherContentHash": "6a9f4b7c8ab07bdd513fa2b485b0e9dcfed3ba51788eee1f197cecef7a8f73dd",
+    "typeScriptVersion": "2.8"
+}

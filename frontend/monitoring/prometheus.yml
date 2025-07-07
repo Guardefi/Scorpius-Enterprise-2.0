@@ -1,0 +1,142 @@
+# SCORPIUS Enterprise Monitoring Configuration
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: "scorpius-enterprise"
+    environment: "production"
+
+rule_files:
+  - "rules/*.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+scrape_configs:
+  # SCORPIUS Backend API
+  - job_name: "scorpius-backend"
+    static_configs:
+      - targets: ["backend:8000"]
+    metrics_path: "/metrics"
+    scrape_interval: 10s
+    scrape_timeout: 5s
+    params:
+      format: ["prometheus"]
+
+  # SCORPIUS Frontend
+  - job_name: "scorpius-frontend"
+    static_configs:
+      - targets: ["frontend:3004"]
+    metrics_path: "/metrics"
+    scrape_interval: 30s
+
+  # Security Analysis Tools
+  - job_name: "scorpius-slither"
+    static_configs:
+      - targets: ["slither-service:8001"]
+    metrics_path: "/metrics"
+    scrape_interval: 60s
+
+  - job_name: "scorpius-mythril"
+    static_configs:
+      - targets: ["mythril-service:8002"]
+    metrics_path: "/metrics"
+    scrape_interval: 60s
+
+  - job_name: "scorpius-manticore"
+    static_configs:
+      - targets: ["manticore-service:8003"]
+    metrics_path: "/metrics"
+    scrape_interval: 60s
+
+  # Database Monitoring
+  - job_name: "postgres-exporter"
+    static_configs:
+      - targets: ["postgres-exporter:9187"]
+    scrape_interval: 30s
+
+  - job_name: "redis-exporter"
+    static_configs:
+      - targets: ["redis-exporter:9121"]
+    scrape_interval: 30s
+
+  # System Metrics
+  - job_name: "node-exporter"
+    static_configs:
+      - targets: ["node-exporter:9100"]
+    scrape_interval: 15s
+
+  # Container Metrics
+  - job_name: "cadvisor"
+    static_configs:
+      - targets: ["cadvisor:8080"]
+    scrape_interval: 15s
+
+  # Security-specific metrics
+  - job_name: "scorpius-security-metrics"
+    static_configs:
+      - targets: ["backend:8000"]
+    metrics_path: "/api/v1/metrics/security"
+    scrape_interval: 5s
+    params:
+      format: ["prometheus"]
+
+  # WebSocket Connection Metrics
+  - job_name: "scorpius-websocket"
+    static_configs:
+      - targets: ["backend:8000"]
+    metrics_path: "/ws/metrics"
+    scrape_interval: 10s
+
+  # Enterprise Features
+  - job_name: "scorpius-enterprise"
+    static_configs:
+      - targets: ["enterprise-service:8010"]
+    metrics_path: "/metrics"
+    scrape_interval: 30s
+    basic_auth:
+      username: "enterprise"
+      password: "${ENTERPRISE_METRICS_PASSWORD}"
+
+# Recording rules for complex queries
+recording_rules:
+  - name: scorpius.rules
+    rules:
+      - record: scorpius:threat_detection_rate
+        expr: rate(scorpius_threats_detected_total[5m])
+
+      - record: scorpius:vulnerability_severity_ratio
+        expr: |
+          (
+            sum(rate(scorpius_vulnerabilities_total{severity="critical"}[5m])) +
+            sum(rate(scorpius_vulnerabilities_total{severity="high"}[5m]))
+          ) / sum(rate(scorpius_vulnerabilities_total[5m]))
+
+      - record: scorpius:scan_success_rate
+        expr: |
+          sum(rate(scorpius_scans_total{status="completed"}[5m])) /
+          sum(rate(scorpius_scans_total[5m]))
+
+      - record: scorpius:api_error_rate
+        expr: |
+          sum(rate(scorpius_api_requests_total{status_code!~"2.."}[5m])) /
+          sum(rate(scorpius_api_requests_total[5m]))
+
+      - record: scorpius:system_health_score
+        expr: |
+          (
+            (scorpius:scan_success_rate * 0.3) +
+            ((1 - scorpius:api_error_rate) * 0.3) +
+            (min(scorpius_cpu_usage / 100, 1) * 0.2) +
+            (min(scorpius_memory_usage_ratio, 1) * 0.2)
+          ) * 100
+
+# Storage configuration
+storage:
+  tsdb:
+    retention.time: 30d
+    retention.size: 50GB
+    wal-compression: true

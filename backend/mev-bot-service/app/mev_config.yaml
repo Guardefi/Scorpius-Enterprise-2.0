@@ -1,0 +1,15 @@
+# MEV Bot Configuration
+rpc_url: "http://localhost:8545"
+private_key: ""
+profit_threshold: 0.015
+gas_limit: 500000
+max_gas_price_gwei: 200
+log_level: "INFO"
+simulation_cache_size: 1000
+min_profit_threshold: 0.1
+min_prediction_threshold: 0.7
+enable_multi_chain: true
+target_gas_price: 50000000000
+model_dir: "models"
+rl_enabled: true
+rl_update_frequency: 100

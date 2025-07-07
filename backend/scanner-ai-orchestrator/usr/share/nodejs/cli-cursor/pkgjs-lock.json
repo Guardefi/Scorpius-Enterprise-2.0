@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "@types/node":{
+   "version":"18.7.23"
+  },
+  "restore-cursor":{
+   "version":"4.0.0"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"cli-cursor",
+ "packages":{
+  "":{
+   "name":"cli-cursor",
+   "version":"4.0.0"
+  },
+  "/usr/share/nodejs/@types/node":{
+   "name":"@types/node",
+   "version":"18.7.23"
+  },
+  "node_modules/restore-cursor":{
+   "name":"restore-cursor",
+   "version":"4.0.0"
+  }
+ },
+ "pkgjs_version":"0.15.7",
+ "version":"4.0.0"
+}

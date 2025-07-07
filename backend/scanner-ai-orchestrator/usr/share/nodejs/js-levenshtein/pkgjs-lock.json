@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "fast-levenshtein":{
+   "version":"2.0.6"
+  },
+  "leven":{
+   "version":"4.0.0"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"js-levenshtein",
+ "packages":{
+  "":{
+   "name":"js-levenshtein",
+   "version":"1.1.6"
+  },
+  "/usr/share/nodejs/fast-levenshtein":{
+   "name":"fast-levenshtein",
+   "version":"2.0.6"
+  },
+  "/usr/share/nodejs/leven":{
+   "name":"leven",
+   "version":"4.0.0"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"1.1.6"
+}

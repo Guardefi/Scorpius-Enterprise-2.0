@@ -1,0 +1,354 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: lodash
+Upstream-Contact: https://github.com/lodash/lodash/issues
+Source: https://github.com/lodash/lodash
+ https://registry.npmjs.org/lodash-cli
+ https://registry.npmjs.org/@types/lodash
+ https://registry.npmjs.org/@types/lodash.add
+ https://registry.npmjs.org/@types/lodash.after
+ https://registry.npmjs.org/@types/lodash.ary
+ https://registry.npmjs.org/@types/lodash.assign
+ https://registry.npmjs.org/@types/lodash.assignin
+ https://registry.npmjs.org/@types/lodash.assigninwith
+ https://registry.npmjs.org/@types/lodash.assignwith
+ https://registry.npmjs.org/@types/lodash.at
+ https://registry.npmjs.org/@types/lodash.attempt
+ https://registry.npmjs.org/@types/lodash.before
+ https://registry.npmjs.org/@types/lodash.bind
+ https://registry.npmjs.org/@types/lodash.bindall
+ https://registry.npmjs.org/@types/lodash.bindkey
+ https://registry.npmjs.org/@types/lodash.camelcase
+ https://registry.npmjs.org/@types/lodash.capitalize
+ https://registry.npmjs.org/@types/lodash.castarray
+ https://registry.npmjs.org/@types/lodash.ceil
+ https://registry.npmjs.org/@types/lodash.chunk
+ https://registry.npmjs.org/@types/lodash.clamp
+ https://registry.npmjs.org/@types/lodash.clone
+ https://registry.npmjs.org/@types/lodash.clonedeep
+ https://registry.npmjs.org/@types/lodash.clonedeepwith
+ https://registry.npmjs.org/@types/lodash.clonewith
+ https://registry.npmjs.org/@types/lodash.compact
+ https://registry.npmjs.org/@types/lodash.concat
+ https://registry.npmjs.org/@types/lodash.cond
+ https://registry.npmjs.org/@types/lodash.constant
+ https://registry.npmjs.org/@types/lodash.countby
+ https://registry.npmjs.org/@types/lodash.create
+ https://registry.npmjs.org/@types/lodash.curry
+ https://registry.npmjs.org/@types/lodash.curryright
+ https://registry.npmjs.org/@types/lodash.debounce
+ https://registry.npmjs.org/@types/lodash.deburr
+ https://registry.npmjs.org/@types/lodash.defaults
+ https://registry.npmjs.org/@types/lodash.defaultsdeep
+ https://registry.npmjs.org/@types/lodash.defer
+ https://registry.npmjs.org/@types/lodash.delay
+ https://registry.npmjs.org/@types/lodash.difference
+ https://registry.npmjs.org/@types/lodash.differenceby
+ https://registry.npmjs.org/@types/lodash.differencewith
+ https://registry.npmjs.org/@types/lodash.divide
+ https://registry.npmjs.org/@types/lodash.drop
+ https://registry.npmjs.org/@types/lodash.dropright
+ https://registry.npmjs.org/@types/lodash.droprightwhile
+ https://registry.npmjs.org/@types/lodash.dropwhile
+ https://registry.npmjs.org/@types/lodash.endswith
+ https://registry.npmjs.org/@types/lodash.eq
+ https://registry.npmjs.org/@types/lodash.escape
+ https://registry.npmjs.org/@types/lodash.escaperegexp
+ https://registry.npmjs.org/@types/lodash.every
+ https://registry.npmjs.org/@types/lodash.fill
+ https://registry.npmjs.org/@types/lodash.filter
+ https://registry.npmjs.org/@types/lodash.find
+ https://registry.npmjs.org/@types/lodash.findindex
+ https://registry.npmjs.org/@types/lodash.findkey
+ https://registry.npmjs.org/@types/lodash.findlast
+ https://registry.npmjs.org/@types/lodash.findlastindex
+ https://registry.npmjs.org/@types/lodash.findlastkey
+ https://registry.npmjs.org/@types/lodash.flatmap
+ https://registry.npmjs.org/@types/lodash.flatmapdeep
+ https://registry.npmjs.org/@types/lodash.flatmapdepth
+ https://registry.npmjs.org/@types/lodash.flatten
+ https://registry.npmjs.org/@types/lodash.flattendeep
+ https://registry.npmjs.org/@types/lodash.flattendepth
+ https://registry.npmjs.org/@types/lodash.flip
+ https://registry.npmjs.org/@types/lodash.floor
+ https://registry.npmjs.org/@types/lodash.flow
+ https://registry.npmjs.org/@types/lodash.flowright
+ https://registry.npmjs.org/@types/lodash.foreach
+ https://registry.npmjs.org/@types/lodash.foreachright
+ https://registry.npmjs.org/@types/lodash.forin
+ https://registry.npmjs.org/@types/lodash.forinright
+ https://registry.npmjs.org/@types/lodash.forown
+ https://registry.npmjs.org/@types/lodash.forownright
+ https://registry.npmjs.org/@types/lodash.frompairs
+ https://registry.npmjs.org/@types/lodash.functions
+ https://registry.npmjs.org/@types/lodash.functionsin
+ https://registry.npmjs.org/@types/lodash.get
+ https://registry.npmjs.org/@types/lodash.groupby
+ https://registry.npmjs.org/@types/lodash.gt
+ https://registry.npmjs.org/@types/lodash.gte
+ https://registry.npmjs.org/@types/lodash.has
+ https://registry.npmjs.org/@types/lodash.hasin
+ https://registry.npmjs.org/@types/lodash.head
+ https://registry.npmjs.org/@types/lodash.identity
+ https://registry.npmjs.org/@types/lodash.includes
+ https://registry.npmjs.org/@types/lodash.indexof
+ https://registry.npmjs.org/@types/lodash.initial
+ https://registry.npmjs.org/@types/lodash.inrange
+ https://registry.npmjs.org/@types/lodash.intersection
+ https://registry.npmjs.org/@types/lodash.intersectionby
+ https://registry.npmjs.org/@types/lodash.intersectionwith
+ https://registry.npmjs.org/@types/lodash.invert
+ https://registry.npmjs.org/@types/lodash.invertby
+ https://registry.npmjs.org/@types/lodash.invoke
+ https://registry.npmjs.org/@types/lodash.invokemap
+ https://registry.npmjs.org/@types/lodash.isarguments
+ https://registry.npmjs.org/@types/lodash.isarray
+ https://registry.npmjs.org/@types/lodash.isarraybuffer
+ https://registry.npmjs.org/@types/lodash.isarraylike
+ https://registry.npmjs.org/@types/lodash.isarraylikeobject
+ https://registry.npmjs.org/@types/lodash.isboolean
+ https://registry.npmjs.org/@types/lodash.isbuffer
+ https://registry.npmjs.org/@types/lodash.isdate
+ https://registry.npmjs.org/@types/lodash.iselement
+ https://registry.npmjs.org/@types/lodash.isempty
+ https://registry.npmjs.org/@types/lodash.isequal
+ https://registry.npmjs.org/@types/lodash.isequalwith
+ https://registry.npmjs.org/@types/lodash.iserror
+ https://registry.npmjs.org/@types/lodash.isfinite
+ https://registry.npmjs.org/@types/lodash.isfunction
+ https://registry.npmjs.org/@types/lodash.isinteger
+ https://registry.npmjs.org/@types/lodash.islength
+ https://registry.npmjs.org/@types/lodash.ismap
+ https://registry.npmjs.org/@types/lodash.ismatch
+ https://registry.npmjs.org/@types/lodash.ismatchwith
+ https://registry.npmjs.org/@types/lodash.isnan
+ https://registry.npmjs.org/@types/lodash.isnative
+ https://registry.npmjs.org/@types/lodash.isnil
+ https://registry.npmjs.org/@types/lodash.isnull
+ https://registry.npmjs.org/@types/lodash.isnumber
+ https://registry.npmjs.org/@types/lodash.isobject
+ https://registry.npmjs.org/@types/lodash.isobjectlike
+ https://registry.npmjs.org/@types/lodash.isplainobject
+ https://registry.npmjs.org/@types/lodash.isregexp
+ https://registry.npmjs.org/@types/lodash.issafeinteger
+ https://registry.npmjs.org/@types/lodash.isset
+ https://registry.npmjs.org/@types/lodash.isstring
+ https://registry.npmjs.org/@types/lodash.issymbol
+ https://registry.npmjs.org/@types/lodash.istypedarray
+ https://registry.npmjs.org/@types/lodash.isundefined
+ https://registry.npmjs.org/@types/lodash.isweakmap
+ https://registry.npmjs.org/@types/lodash.isweakset
+ https://registry.npmjs.org/@types/lodash.iteratee
+ https://registry.npmjs.org/@types/lodash.join
+ https://registry.npmjs.org/@types/lodash.kebabcase
+ https://registry.npmjs.org/@types/lodash.keyby
+ https://registry.npmjs.org/@types/lodash.keys
+ https://registry.npmjs.org/@types/lodash.keysin
+ https://registry.npmjs.org/@types/lodash.last
+ https://registry.npmjs.org/@types/lodash.lastindexof
+ https://registry.npmjs.org/@types/lodash.lowercase
+ https://registry.npmjs.org/@types/lodash.lowerfirst
+ https://registry.npmjs.org/@types/lodash.lt
+ https://registry.npmjs.org/@types/lodash.lte
+ https://registry.npmjs.org/@types/lodash.map
+ https://registry.npmjs.org/@types/lodash.mapkeys
+ https://registry.npmjs.org/@types/lodash.mapvalues
+ https://registry.npmjs.org/@types/lodash.matches
+ https://registry.npmjs.org/@types/lodash.matchesproperty
+ https://registry.npmjs.org/@types/lodash.max
+ https://registry.npmjs.org/@types/lodash.maxby
+ https://registry.npmjs.org/@types/lodash.mean
+ https://registry.npmjs.org/@types/lodash.meanby
+ https://registry.npmjs.org/@types/lodash.memoize
+ https://registry.npmjs.org/@types/lodash.merge
+ https://registry.npmjs.org/@types/lodash.mergewith
+ https://registry.npmjs.org/@types/lodash.method
+ https://registry.npmjs.org/@types/lodash.methodof
+ https://registry.npmjs.org/@types/lodash.min
+ https://registry.npmjs.org/@types/lodash.minby
+ https://registry.npmjs.org/@types/lodash.mixin
+ https://registry.npmjs.org/@types/lodash.multiply
+ https://registry.npmjs.org/@types/lodash.negate
+ https://registry.npmjs.org/@types/lodash.noop
+ https://registry.npmjs.org/@types/lodash.now
+ https://registry.npmjs.org/@types/lodash.nth
+ https://registry.npmjs.org/@types/lodash.ntharg
+ https://registry.npmjs.org/@types/lodash.omit
+ https://registry.npmjs.org/@types/lodash.omitby
+ https://registry.npmjs.org/@types/lodash.once
+ https://registry.npmjs.org/@types/lodash.orderby
+ https://registry.npmjs.org/@types/lodash.over
+ https://registry.npmjs.org/@types/lodash.overargs
+ https://registry.npmjs.org/@types/lodash.overevery
+ https://registry.npmjs.org/@types/lodash.oversome
+ https://registry.npmjs.org/@types/lodash.pad
+ https://registry.npmjs.org/@types/lodash.padend
+ https://registry.npmjs.org/@types/lodash.padstart
+ https://registry.npmjs.org/@types/lodash.parseint
+ https://registry.npmjs.org/@types/lodash.partial
+ https://registry.npmjs.org/@types/lodash.partialright
+ https://registry.npmjs.org/@types/lodash.partition
+ https://registry.npmjs.org/@types/lodash.pick
+ https://registry.npmjs.org/@types/lodash.pickby
+ https://registry.npmjs.org/@types/lodash.property
+ https://registry.npmjs.org/@types/lodash.propertyof
+ https://registry.npmjs.org/@types/lodash.pull
+ https://registry.npmjs.org/@types/lodash.pullall
+ https://registry.npmjs.org/@types/lodash.pullallby
+ https://registry.npmjs.org/@types/lodash.pullallwith
+ https://registry.npmjs.org/@types/lodash.pullat
+ https://registry.npmjs.org/@types/lodash.random
+ https://registry.npmjs.org/@types/lodash.range
+ https://registry.npmjs.org/@types/lodash.rangeright
+ https://registry.npmjs.org/@types/lodash.rearg
+ https://registry.npmjs.org/@types/lodash.reduce
+ https://registry.npmjs.org/@types/lodash.reduceright
+ https://registry.npmjs.org/@types/lodash.reject
+ https://registry.npmjs.org/@types/lodash.remove
+ https://registry.npmjs.org/@types/lodash.repeat
+ https://registry.npmjs.org/@types/lodash.replace
+ https://registry.npmjs.org/@types/lodash.rest
+ https://registry.npmjs.org/@types/lodash.result
+ https://registry.npmjs.org/@types/lodash.reverse
+ https://registry.npmjs.org/@types/lodash.round
+ https://registry.npmjs.org/@types/lodash.sample
+ https://registry.npmjs.org/@types/lodash.samplesize
+ https://registry.npmjs.org/@types/lodash.set
+ https://registry.npmjs.org/@types/lodash.setwith
+ https://registry.npmjs.org/@types/lodash.shuffle
+ https://registry.npmjs.org/@types/lodash.size
+ https://registry.npmjs.org/@types/lodash.slice
+ https://registry.npmjs.org/@types/lodash.snakecase
+ https://registry.npmjs.org/@types/lodash.some
+ https://registry.npmjs.org/@types/lodash.sortby
+ https://registry.npmjs.org/@types/lodash.sortedindex
+ https://registry.npmjs.org/@types/lodash.sortedindexby
+ https://registry.npmjs.org/@types/lodash.sortedindexof
+ https://registry.npmjs.org/@types/lodash.sortedlastindex
+ https://registry.npmjs.org/@types/lodash.sortedlastindexby
+ https://registry.npmjs.org/@types/lodash.sortedlastindexof
+ https://registry.npmjs.org/@types/lodash.sorteduniq
+ https://registry.npmjs.org/@types/lodash.sorteduniqby
+ https://registry.npmjs.org/@types/lodash.split
+ https://registry.npmjs.org/@types/lodash.spread
+ https://registry.npmjs.org/@types/lodash.startcase
+ https://registry.npmjs.org/@types/lodash.startswith
+ https://registry.npmjs.org/@types/lodash.stubfalse
+ https://registry.npmjs.org/@types/lodash.stubtrue
+ https://registry.npmjs.org/@types/lodash.subtract
+ https://registry.npmjs.org/@types/lodash.sum
+ https://registry.npmjs.org/@types/lodash.sumby
+ https://registry.npmjs.org/@types/lodash.tail
+ https://registry.npmjs.org/@types/lodash.take
+ https://registry.npmjs.org/@types/lodash.takeright
+ https://registry.npmjs.org/@types/lodash.takerightwhile
+ https://registry.npmjs.org/@types/lodash.takewhile
+ https://registry.npmjs.org/@types/lodash.template
+ https://registry.npmjs.org/@types/lodash.throttle
+ https://registry.npmjs.org/@types/lodash.times
+ https://registry.npmjs.org/@types/lodash.toarray
+ https://registry.npmjs.org/@types/lodash.tofinite
+ https://registry.npmjs.org/@types/lodash.tointeger
+ https://registry.npmjs.org/@types/lodash.tolength
+ https://registry.npmjs.org/@types/lodash.tolower
+ https://registry.npmjs.org/@types/lodash.tonumber
+ https://registry.npmjs.org/@types/lodash.topairs
+ https://registry.npmjs.org/@types/lodash.topairsin
+ https://registry.npmjs.org/@types/lodash.topath
+ https://registry.npmjs.org/@types/lodash.toplainobject
+ https://registry.npmjs.org/@types/lodash.tosafeinteger
+ https://registry.npmjs.org/@types/lodash.tostring
+ https://registry.npmjs.org/@types/lodash.toupper
+ https://registry.npmjs.org/@types/lodash.transform
+ https://registry.npmjs.org/@types/lodash.trim
+ https://registry.npmjs.org/@types/lodash.trimend
+ https://registry.npmjs.org/@types/lodash.trimstart
+ https://registry.npmjs.org/@types/lodash.truncate
+ https://registry.npmjs.org/@types/lodash.unary
+ https://registry.npmjs.org/@types/lodash.unescape
+ https://registry.npmjs.org/@types/lodash.union
+ https://registry.npmjs.org/@types/lodash.unionby
+ https://registry.npmjs.org/@types/lodash.unionwith
+ https://registry.npmjs.org/@types/lodash.uniq
+ https://registry.npmjs.org/@types/lodash.uniqby
+ https://registry.npmjs.org/@types/lodash.uniqueid
+ https://registry.npmjs.org/@types/lodash.uniqwith
+ https://registry.npmjs.org/@types/lodash.unset
+ https://registry.npmjs.org/@types/lodash.unzip
+ https://registry.npmjs.org/@types/lodash.unzipwith
+ https://registry.npmjs.org/@types/lodash.update
+ https://registry.npmjs.org/@types/lodash.updatewith
+ https://registry.npmjs.org/@types/lodash.uppercase
+ https://registry.npmjs.org/@types/lodash.upperfirst
+ https://registry.npmjs.org/@types/lodash.values
+ https://registry.npmjs.org/@types/lodash.valuesin
+ https://registry.npmjs.org/@types/lodash.without
+ https://registry.npmjs.org/@types/lodash.words
+ https://registry.npmjs.org/@types/lodash.wrap
+ https://registry.npmjs.org/@types/lodash.xor
+ https://registry.npmjs.org/@types/lodash.xorby
+ https://registry.npmjs.org/@types/lodash.xorwith
+ https://registry.npmjs.org/@types/lodash.zip
+ https://registry.npmjs.org/@types/lodash.zipobject
+ https://registry.npmjs.org/@types/lodash.zipobjectdeep
+ https://registry.npmjs.org/@types/lodash.zipwith
+Comment: Repackaged to exclude some non-DFSG files (copyrighted ICC profiles embedded or source missing) and generated files
+Files-Excluded:
+ vendor
+ dist
+
+Files: *
+Copyright: OpenJS Foundation and other contributors <https://openjsf.org/>
+           Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+License: Expat
+
+Files: debian/*
+Copyright: 2014, Valentin OVD <valentin.ovd@live.fr>
+ 2015-2016, Thomas Goirand <zigo@debian.org>
+ 2016, Sruthi Chandran <srud@disroot.org>
+ 2016, Paolo Greppi <paolo.greppi@libpf.com>
+ 2016-2019, Pirate Praveen <praveen@debian.org>
+ 2019-2021, Yadd <yadd@debian.org>
+License: GPL-2+
+
+Files: types-*/*
+Copyright: Microsoft Corporation
+License: Expat
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person
+ obtaining a copy of this software and associated documentation
+ files (the "Software"), to deal in the Software without
+ restriction, including without limitation the rights to use,
+ copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the
+ Software is furnished to do so, subject to the following
+ conditions:
+ .
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ OTHER DEALINGS IN THE SOFTWARE.
+
+License: GPL-2+
+ This package is free software; you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation; either version 2 of the License, or
+ (at your option) any later version.
+ .
+ This package is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ .
+ You should have received a copy of the GNU General Public License
+ along with this program. If not, see <https://www.gnu.org/licenses/>
+ .
+ On Debian systems, the complete text of the GNU General
+ Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".

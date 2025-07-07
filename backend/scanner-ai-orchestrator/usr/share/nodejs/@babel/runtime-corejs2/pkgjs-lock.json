@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "core-js":{
+   "version":"3.26.1"
+  },
+  "regenerator-runtime":{
+   "version":"0.13.11"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@babel/runtime-corejs2",
+ "packages":{
+  "":{
+   "name":"@babel/runtime-corejs2",
+   "version":"7.20.13"
+  },
+  "/usr/share/nodejs/regenerator-runtime":{
+   "name":"regenerator-runtime",
+   "version":"0.13.11"
+  },
+  "node_modules/core-js":{
+   "name":"core-js",
+   "version":"3.26.1"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"7.20.13"
+}

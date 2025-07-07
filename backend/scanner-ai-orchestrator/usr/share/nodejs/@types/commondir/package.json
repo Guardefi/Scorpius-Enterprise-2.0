@@ -1,0 +1,22 @@
+{
+    "name": "@types/commondir",
+    "version": "1.0.0",
+    "description": "TypeScript definitions for commondir",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Leonard Thieu",
+            "url": "https://github.com/leonard-thieu",
+            "githubUsername": "leonard-thieu"
+        }
+    ],
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "aca7c139848b80cd5891a3849cfc10957893084b5212e5cb7a5f1ce3a1a3d4ab",
+    "typeScriptVersion": "2.0"
+}

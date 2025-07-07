@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "nyc":{
+   "version":"15.1.0"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"istanbul-lib-coverage",
+ "packages":{
+  "":{
+   "name":"istanbul-lib-coverage",
+   "version":"3.2.0"
+  },
+  "node_modules/nyc":{
+   "name":"nyc",
+   "version":"15.1.0"
+  }
+ },
+ "pkgjs_version":"0.11.7",
+ "version":"3.2.0"
+}

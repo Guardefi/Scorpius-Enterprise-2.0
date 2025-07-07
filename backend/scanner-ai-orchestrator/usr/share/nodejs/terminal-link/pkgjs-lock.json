@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "ansi-escapes":{
+   "version":"4.3.1"
+  },
+  "supports-hyperlinks":{
+   "version":"2.3.0"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"terminal-link",
+ "packages":{
+  "":{
+   "name":"terminal-link",
+   "version":"2.1.1"
+  },
+  "node_modules/ansi-escapes":{
+   "name":"ansi-escapes",
+   "version":"4.3.1"
+  },
+  "node_modules/supports-hyperlinks":{
+   "name":"supports-hyperlinks",
+   "version":"2.3.0"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"2.1.1"
+}

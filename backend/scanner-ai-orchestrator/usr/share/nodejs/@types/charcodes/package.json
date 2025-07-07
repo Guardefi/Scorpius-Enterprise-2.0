@@ -1,0 +1,25 @@
+{
+    "name": "@types/charcodes",
+    "version": "0.2.0",
+    "description": "TypeScript definitions for charcodes",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/charcodes",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Dylan Armstrong",
+            "url": "https://github.com/dylanarmstrong",
+            "githubUsername": "dylanarmstrong"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/charcodes"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "d6176ffc8fe2a9597dee1d151bad7a8c78d373241e0f3f9ef5ebbab16fbbaa27",
+    "typeScriptVersion": "3.8"
+}

@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "@types/lodash":{
+   "version":"4.14.177"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@types/lodash.update",
+ "packages":{
+  "":{
+   "name":"@types/lodash.update",
+   "version":"4.10.6"
+  },
+  "/usr/share/nodejs/@types/lodash":{
+   "name":"@types/lodash",
+   "version":"4.14.177"
+  }
+ },
+ "pkgjs_version":"0.14.25",
+ "version":"4.10.6"
+}

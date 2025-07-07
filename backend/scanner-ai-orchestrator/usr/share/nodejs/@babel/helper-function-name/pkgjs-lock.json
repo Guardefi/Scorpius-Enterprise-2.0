@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "@babel/template":{
+   "version":"7.20.7"
+  },
+  "@babel/types":{
+   "version":"7.20.7"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@babel/helper-function-name",
+ "packages":{
+  "":{
+   "name":"@babel/helper-function-name",
+   "version":"7.19.0"
+  },
+  "node_modules/@babel/template":{
+   "name":"@babel/template",
+   "version":"7.20.7"
+  },
+  "node_modules/@babel/types":{
+   "name":"@babel/types",
+   "version":"7.20.7"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"7.19.0"
+}

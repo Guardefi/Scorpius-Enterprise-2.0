@@ -1,0 +1,1 @@
+../../javascript/is-typedarray/index.min.js

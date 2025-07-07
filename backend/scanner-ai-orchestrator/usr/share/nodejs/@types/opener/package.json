@@ -1,0 +1,19 @@
+{
+    "name": "@types/opener",
+    "version": "1.4.0",
+    "description": "TypeScript definitions for opener",
+    "license": "MIT",
+    "author": "Rahul Ravikumar <https://github.com/tikurahul>",
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://www.github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/node": "*"
+    },
+    "peerDependencies": {},
+    "typesPublisherContentHash": "629b1a33db3abdb2246ba2e02963376493626866d9cc88d67535e76175e7e787",
+    "typeScriptVersion": "2.0"
+}

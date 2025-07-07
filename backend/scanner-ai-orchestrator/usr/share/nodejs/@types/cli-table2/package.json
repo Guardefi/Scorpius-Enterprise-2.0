@@ -1,0 +1,25 @@
+{
+    "name": "@types/cli-table2",
+    "version": "0.2.3",
+    "description": "TypeScript definitions for cli-table2",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/cli-table2",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Melvin Groenhoff",
+            "url": "https://github.com/mgroenhoff",
+            "githubUsername": "mgroenhoff"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/cli-table2"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "5cc21206a57437c3e610f8949579907625209e9b713a22d931d253aaf4c2550e",
+    "typeScriptVersion": "3.6"
+}

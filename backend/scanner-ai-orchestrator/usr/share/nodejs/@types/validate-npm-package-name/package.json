@@ -1,0 +1,30 @@
+{
+    "name": "@types/validate-npm-package-name",
+    "version": "4.0.0",
+    "description": "TypeScript definitions for validate-npm-package-name",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/validate-npm-package-name",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Florian Keller",
+            "url": "https://github.com/ffflorian",
+            "githubUsername": "ffflorian"
+        },
+        {
+            "name": "Piotr Błażejewicz",
+            "url": "https://github.com/peterblazejewicz",
+            "githubUsername": "peterblazejewicz"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/validate-npm-package-name"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "db5fd49b6f4bc643c4d59615d89ed79a7db6ef2e7b1b6629d78db888763cd70e",
+    "typeScriptVersion": "4.0"
+}

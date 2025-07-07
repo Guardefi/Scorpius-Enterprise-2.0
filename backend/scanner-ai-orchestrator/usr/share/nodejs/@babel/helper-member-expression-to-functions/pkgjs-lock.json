@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "@babel/traverse":{
+   "version":"7.20.13"
+  },
+  "@babel/types":{
+   "version":"7.20.7"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@babel/helper-member-expression-to-functions",
+ "packages":{
+  "":{
+   "name":"@babel/helper-member-expression-to-functions",
+   "version":"7.20.7"
+  },
+  "node_modules/@babel/traverse":{
+   "name":"@babel/traverse",
+   "version":"7.20.13"
+  },
+  "node_modules/@babel/types":{
+   "name":"@babel/types",
+   "version":"7.20.7"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"7.20.7"
+}

@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "ci-info":{
+   "version":"3.6.1"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"is-ci",
+ "packages":{
+  "":{
+   "name":"is-ci",
+   "version":"3.0.1"
+  },
+  "node_modules/ci-info":{
+   "name":"ci-info",
+   "version":"3.6.1"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"3.0.1"
+}

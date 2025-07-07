@@ -1,0 +1,23 @@
+{
+    "name": "@types/fancy-log",
+    "version": "1.3.1",
+    "description": "TypeScript definitions for fancy-log",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Pine Mizune",
+            "url": "https://github.com/pine",
+            "githubUsername": "pine"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "cfa2a10cba4ac78cc349fe325110dffcb4f2be04aaf8f167452857e9f4a8d2e3",
+    "typeScriptVersion": "2.0"
+}

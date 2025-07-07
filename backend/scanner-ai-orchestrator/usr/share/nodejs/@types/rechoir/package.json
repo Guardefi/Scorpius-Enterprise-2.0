@@ -1,0 +1,25 @@
+{
+    "name": "@types/rechoir",
+    "version": "0.6.1",
+    "description": "TypeScript definitions for rechoir",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "BendingBender",
+            "url": "https://github.com/BendingBender",
+            "githubUsername": "BendingBender"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/interpret": "*"
+    },
+    "typesPublisherContentHash": "feac550552bfb543c43fdeb9e8f84246f3f08de2c5920339207f857ffbfb5402",
+    "typeScriptVersion": "2.0"
+}

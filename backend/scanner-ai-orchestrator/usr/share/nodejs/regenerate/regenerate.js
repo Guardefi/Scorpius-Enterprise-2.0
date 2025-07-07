@@ -1,0 +1,1 @@
+../../javascript/regenerate/regenerate.js

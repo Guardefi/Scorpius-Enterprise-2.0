@@ -1,0 +1,23 @@
+# Node packages
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Python caches
+__pycache__/
+
+# Environment files
+.env
+
+# Lockfiles
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Docker overrides
+docker-compose.override.yml
+
+# VS Code settings
+.vscode/

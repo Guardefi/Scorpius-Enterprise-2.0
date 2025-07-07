@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "@types/istanbul-lib-coverage":{
+   "version":"2.0.4"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@types/istanbul-lib-report",
+ "packages":{
+  "":{
+   "name":"@types/istanbul-lib-report",
+   "version":"3.0.0"
+  },
+  "node_modules/@types/istanbul-lib-coverage":{
+   "name":"@types/istanbul-lib-coverage",
+   "version":"2.0.4"
+  }
+ },
+ "pkgjs_version":"0.11.7",
+ "version":"3.0.0"
+}

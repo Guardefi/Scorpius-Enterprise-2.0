@@ -1,0 +1,32 @@
+{
+  "name": "eslint-plugin-webassembly",
+  "version": "1.11.3",
+  "description": "ESLint plugin for WebAssembly",
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "wasm",
+    "WebAssembly",
+    "wast"
+  ],
+  "author": "Sven Sauleau",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "dependencies": {
+    "@webassemblyjs/ast": "1.11.3",
+    "@webassemblyjs/wasm-parser": "1.11.3",
+    "eslint-rule-composer": "^0.3.0",
+    "estraverse": "^5.2.0",
+    "requireindex": "~1.2.0"
+  },
+  "devDependencies": {
+    "eslint": "~3.9.1",
+    "mocha": "^6.0.2"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtuc/webassemblyjs.git"
+  }
+}

@@ -1,0 +1,35 @@
+{
+ "dependencies":{
+  "@babel/core":{
+   "version":"7.20.12"
+  },
+  "babel-plugin-jest-hoist":{
+   "version":"29.2.0"
+  },
+  "babel-preset-current-node-syntax":{
+   "version":"1.0.1"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"babel-preset-jest",
+ "packages":{
+  "":{
+   "name":"babel-preset-jest",
+   "version":"29.2.0"
+  },
+  "/usr/share/nodejs/babel-preset-current-node-syntax":{
+   "name":"babel-preset-current-node-syntax",
+   "version":"1.0.1"
+  },
+  "node_modules/@babel/core":{
+   "name":"@babel/core",
+   "version":"7.20.12"
+  },
+  "node_modules/babel-plugin-jest-hoist":{
+   "name":"babel-plugin-jest-hoist",
+   "version":"29.2.0"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"29.2.0"
+}

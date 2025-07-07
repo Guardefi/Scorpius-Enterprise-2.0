@@ -1,0 +1,27 @@
+{
+    "name": "@types/postcss-modules-values",
+    "version": "4.0.0",
+    "description": "TypeScript definitions for postcss-modules-values",
+    "homepage": "https://github.com/DefinitelyTyped/DefinitelyTyped/tree/master/types/postcss-modules-values",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Bob Matcuk",
+            "url": "https://github.com/bmatcuk",
+            "githubUsername": "bmatcuk"
+        }
+    ],
+    "main": "",
+    "types": "index.d.ts",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/postcss-modules-values"
+    },
+    "scripts": {},
+    "dependencies": {
+        "postcss": "^8.0.0"
+    },
+    "typesPublisherContentHash": "cb19c6818e066a76621fd8fdeb42dc0d5cfb5743a6e946da60bcf98e617024eb",
+    "typeScriptVersion": "3.8"
+}

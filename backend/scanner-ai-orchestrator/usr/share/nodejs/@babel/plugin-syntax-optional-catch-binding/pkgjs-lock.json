@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "@babel/core":{
+   "version":"7.20.12"
+  },
+  "@babel/helper-plugin-utils":{
+   "version":"7.20.2"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@babel/plugin-syntax-optional-catch-binding",
+ "packages":{
+  "":{
+   "name":"@babel/plugin-syntax-optional-catch-binding",
+   "version":"7.8.3"
+  },
+  "/usr/share/nodejs/@babel/core":{
+   "name":"@babel/core",
+   "version":"7.20.12"
+  },
+  "node_modules/@babel/helper-plugin-utils":{
+   "name":"@babel/helper-plugin-utils",
+   "version":"7.20.2"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"7.8.3"
+}

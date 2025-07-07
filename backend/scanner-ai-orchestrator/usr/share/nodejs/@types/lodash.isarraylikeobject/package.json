@@ -1,0 +1,36 @@
+{
+    "name": "@types/lodash.isarraylikeobject",
+    "version": "4.2.6",
+    "description": "TypeScript definitions for lodash.isArrayLikeObject",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Brian Zengel",
+            "url": "https://github.com/bczengel",
+            "githubUsername": "bczengel"
+        },
+        {
+            "name": "Ilya Mochalov",
+            "url": "https://github.com/chrootsu",
+            "githubUsername": "chrootsu"
+        },
+        {
+            "name": "Stepan Mikhaylyuk",
+            "url": "https://github.com/stepancar",
+            "githubUsername": "stepancar"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/lodash.isarraylikeobject"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/lodash": "*"
+    },
+    "typesPublisherContentHash": "06be654c38955f3381fc3c084d7d260d795c816de36354ed2f6b0de12d7c674d",
+    "typeScriptVersion": "2.8"
+}

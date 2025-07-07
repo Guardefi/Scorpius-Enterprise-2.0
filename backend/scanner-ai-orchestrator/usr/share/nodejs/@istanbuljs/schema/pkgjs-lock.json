@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "tap":{
+   "version":"12.0.1"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@istanbuljs/schema",
+ "packages":{
+  "":{
+   "name":"@istanbuljs/schema",
+   "version":"0.1.3"
+  },
+  "/usr/share/nodejs/tap":{
+   "name":"tap",
+   "version":"12.0.1"
+  }
+ },
+ "pkgjs_version":"0.11.7",
+ "version":"0.1.3"
+}

@@ -1,0 +1,122 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: escodegen
+Upstream-Contact: https://github.com/estools/escodegen/issues
+Source: https://github.com/estools/escodegen
+ https://registry.npmjs.org/@types/escodegen
+Files-Excluded: 
+  test/3rdparty
+
+Files: *
+Copyright: 2012-2018 Yusuke Suzuki <utatane.tea@gmail.com>
+License: BSD-2-Clause
+
+Files: benchmark/old.js
+Copyright: 2013 Irakli Gozalishvili <rfobic@gmail.com>
+           2012-2014 Yusuke Suzuki <utatane.tea@gmail.com>
+           2012-2013 Michael Ficarra <escodegen.copyright@michael.ficarra.me>
+           2012-2013 Mathias Bynens <mathias@qiwi.be>
+           2012 Robert Gust-Bardon <donate@robert.gust-bardon.org>
+           2012 Kris Kowal <kris.kowal@cixar.com>
+           2012 Joost-Wim Boekesteijn <joost-wim@boekesteijn.nl>
+           2012 John Freeman <jfreeman08@gmail.com>
+           2012 Arpad Borsos <arpad.borsos@googlemail.com>
+           2011-2012 Ariya Hidayat <ariya.hidayat@gmail.com>
+License: BSD-2-Clause
+
+Files: debian/*
+Copyright: 2016 Pirate Praveen <praveen@debian.org>
+ 2020 Yadd <yadd@debian.org>
+License: BSD-2-Clause
+
+Files: types-escodegen/*
+Copyright: Microsoft Corporation
+License: Expat
+
+Files: debian/tests/test_modules/chai-exclude/*
+Copyright: 2017-present Saugat Acharya
+License: Expat
+
+Files: debian/tests/test_modules/fclone/*
+Copyright: 2016 Antoine Bluchet <soyuka@gmail.com>
+License: Expat
+
+Files: escodegen.js
+Copyright: 2015 Ingvar Stepanyan <me@rreverser.com>
+           2014 Ivan Nikulin <ifaaan@gmail.com>
+           2013 Irakli Gozalishvili <rfobic@gmail.com>
+           2012-2018 Yusuke Suzuki <utatane.tea@gmail.com>
+           2012-2013 Michael Ficarra <escodegen.copyright@michael.ficarra.me>
+           2012-2013 Mathias Bynens <mathias@qiwi.be>
+           2012 Robert Gust-Bardon <donate@robert.gust-bardon.org>
+           2012 Kris Kowal <kris.kowal@cixar.com>
+           2012 Joost-Wim Boekesteijn <joost-wim@boekesteijn.nl>
+           2012 John Freeman <jfreeman08@gmail.com>
+           2012 Arpad Borsos <arpad.borsos@googlemail.com>
+           2011-2012 Ariya Hidayat <ariya.hidayat@gmail.com>
+License: BSD-2-Clause
+
+Files: test/options.js
+Copyright: 2012-2013 Yusuke Suzuki <utatane.tea@gmail.com>
+           2012 Robert Gust-Bardon <donate@robert.gust-bardon.org>
+License: BSD-2-Clause
+
+Files: test/preserve-blank-lines.js
+Copyright: 2014 Kevin Barabash <kevinb7@gmail.com>
+           2011-2013 Yusuke Suzuki <utatane.tea@gmail.com>
+License: BSD-2-Clause
+
+Files: test/source-map.js
+Copyright: 2013 Yusuke Suzuki <utatane.tea@gmail.com>
+           2013 Irakli Gozalishvili <rfobic@gmail.com>
+License: BSD-2-Clause
+
+Files: test/test.js test/harmony-esprima2.js test/harmony.js
+Copyright: 2012-2013 Yusuke Suzuki <utatane.tea@gmail.com>
+           2012 Ariya Hidayat <ariya.hidayat@gmail.com>
+           2012 Joost-Wim Boekesteijn <joost-wim@boekesteijn.nl>
+           2012 Arpad Borsos <arpad.borsos@googlemail.com>
+           2011 Ariya Hidayat <ariya.hidayat@gmail.com>
+           2011 Yusuke Suzuki <utatane.tea@gmail.com>
+           2011 Arpad Borsos <arpad.borsos@googlemail.com>
+License: BSD-2-Clause
+
+License: BSD-2-Clause
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+ .
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+ LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE HOLDERS OR
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+License: Expat
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.

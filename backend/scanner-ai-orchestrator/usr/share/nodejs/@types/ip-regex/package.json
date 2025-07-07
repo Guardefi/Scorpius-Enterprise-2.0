@@ -1,0 +1,14 @@
+{
+    "name": "@types/ip-regex",
+    "version": "4.1.1",
+    "typings": null,
+    "description": "Stub TypeScript definitions entry for ip-regex, which provides its own types definitions",
+    "main": "",
+    "scripts": {},
+    "author": "",
+    "repository": "https://github.com/sindresorhus/ip-regex",
+    "license": "MIT",
+    "dependencies": {
+        "ip-regex": "*"
+    }
+}

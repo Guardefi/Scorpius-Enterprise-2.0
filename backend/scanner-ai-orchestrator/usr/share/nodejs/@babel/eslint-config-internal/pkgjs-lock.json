@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "@babel/eslint-parser":{
+   "version":"7.19.1"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@babel/eslint-config-internal",
+ "packages":{
+  "":{
+   "name":"@babel/eslint-config-internal",
+   "version":"7.20.13"
+  },
+  "node_modules/@babel/eslint-parser":{
+   "name":"@babel/eslint-parser",
+   "version":"7.19.1"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"7.20.13"
+}

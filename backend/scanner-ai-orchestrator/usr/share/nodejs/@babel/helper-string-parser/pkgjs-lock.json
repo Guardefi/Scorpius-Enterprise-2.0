@@ -1,0 +1,21 @@
+{
+ "dependencies":{
+  "charcodes":{
+   "version":"0.2.0"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@babel/helper-string-parser",
+ "packages":{
+  "":{
+   "name":"@babel/helper-string-parser",
+   "version":"7.19.4"
+  },
+  "node_modules/charcodes":{
+   "name":"charcodes",
+   "version":"0.2.0"
+  }
+ },
+ "pkgjs_version":"0.15.12",
+ "version":"7.19.4"
+}

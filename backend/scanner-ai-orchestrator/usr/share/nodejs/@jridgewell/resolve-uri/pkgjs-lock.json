@@ -1,0 +1,35 @@
+{
+ "dependencies":{
+  "@rollup/plugin-typescript":{
+   "version":"9.0.1"
+  },
+  "rollup":{
+   "version":"2.79.1"
+  },
+  "typescript":{
+   "version":"4.8.4"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"@jridgewell/resolve-uri",
+ "packages":{
+  "":{
+   "name":"@jridgewell/resolve-uri",
+   "version":"3.1.0"
+  },
+  "/usr/share/nodejs/@rollup/plugin-typescript":{
+   "name":"@rollup/plugin-typescript",
+   "version":"9.0.1"
+  },
+  "/usr/share/nodejs/rollup":{
+   "name":"rollup",
+   "version":"2.79.1"
+  },
+  "/usr/share/nodejs/typescript":{
+   "name":"typescript",
+   "version":"4.8.4"
+  }
+ },
+ "pkgjs_version":"0.15.7",
+ "version":"3.1.0"
+}

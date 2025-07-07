@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "append-transform":{
+   "version":"2.0.0"
+  },
+  "nyc":{
+   "version":"15.1.0"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"istanbul-lib-hook",
+ "packages":{
+  "":{
+   "name":"istanbul-lib-hook",
+   "version":"3.0.0"
+  },
+  "node_modules/append-transform":{
+   "name":"append-transform",
+   "version":"2.0.0"
+  },
+  "node_modules/nyc":{
+   "name":"nyc",
+   "version":"15.1.0"
+  }
+ },
+ "pkgjs_version":"0.11.7",
+ "version":"3.0.0"
+}

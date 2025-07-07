@@ -1,0 +1,36 @@
+{
+    "name": "@types/lodash.isarraybuffer",
+    "version": "4.4.6",
+    "description": "TypeScript definitions for lodash.isArrayBuffer",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Brian Zengel",
+            "url": "https://github.com/bczengel",
+            "githubUsername": "bczengel"
+        },
+        {
+            "name": "Ilya Mochalov",
+            "url": "https://github.com/chrootsu",
+            "githubUsername": "chrootsu"
+        },
+        {
+            "name": "Stepan Mikhaylyuk",
+            "url": "https://github.com/stepancar",
+            "githubUsername": "stepancar"
+        }
+    ],
+    "main": "",
+    "types": "index",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git",
+        "directory": "types/lodash.isarraybuffer"
+    },
+    "scripts": {},
+    "dependencies": {
+        "@types/lodash": "*"
+    },
+    "typesPublisherContentHash": "d97e7b0a37934fb10f3e616a256dc2ddef6410d246bfa6ee0ebea1b7587e7de7",
+    "typeScriptVersion": "2.8"
+}

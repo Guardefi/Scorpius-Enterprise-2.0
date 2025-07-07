@@ -1,0 +1,28 @@
+{
+ "dependencies":{
+  "lodash._reinterpolate":{
+   "version":"4.17.21"
+  },
+  "lodash.templatesettings":{
+   "version":"4.17.21"
+  }
+ },
+ "lockfileVersion":2,
+ "name":"lodash.template",
+ "packages":{
+  "":{
+   "name":"lodash.template",
+   "version":"4.17.21"
+  },
+  "/usr/share/nodejs/lodash._reinterpolate":{
+   "name":"lodash._reinterpolate",
+   "version":"4.17.21"
+  },
+  "/usr/share/nodejs/lodash.templatesettings":{
+   "name":"lodash.templatesettings",
+   "version":"4.17.21"
+  }
+ },
+ "pkgjs_version":"0.14.25",
+ "version":"4.17.21"
+}

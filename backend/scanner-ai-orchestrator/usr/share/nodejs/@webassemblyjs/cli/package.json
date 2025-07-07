@@ -1,0 +1,44 @@
+{
+  "name": "@webassemblyjs/cli",
+  "version": "1.11.3",
+  "description": "Toolbox for WebAssembly",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "keywords": [
+    "webassembly",
+    "interpreter",
+    "javascript",
+    "ast",
+    "compiler",
+    "parser",
+    "polyfill"
+  ],
+  "scripts": {
+    "test": "echo no tests"
+  },
+  "author": "Sven Sauleau",
+  "license": "MIT",
+  "dependencies": {
+    "@webassemblyjs/ast": "1.11.3",
+    "@webassemblyjs/wasm-parser": "1.11.3",
+    "@webassemblyjs/wast-parser": "1.11.3",
+    "@webassemblyjs/wast-printer": "1.11.3",
+    "webassemblyjs": "1.11.3"
+  },
+  "bin": {
+    "wasmdump": "lib/wasmdump.js",
+    "wasmast": "lib/wasmast.js",
+    "wasmrun": "lib/wasmrun.js",
+    "wasm2wast": "lib/wasm2wast.js",
+    "wastast": "lib/wastast.js",
+    "get-producer-section": "lib/get-producer-section.js",
+    "wast-to-wasm-semantics": "lib/wast-to-wasm-semantics.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xtuc/webassemblyjs.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

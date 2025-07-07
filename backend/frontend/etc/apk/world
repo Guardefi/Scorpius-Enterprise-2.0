@@ -1,0 +1,15 @@
+alpine-baselayout
+alpine-keys
+alpine-release
+apk-tools
+busybox
+ca-certificates
+curl
+gettext-envsubst
+libc-utils
+nginx=1.27.5-r1
+nginx-module-geoip=1.27.5-r1
+nginx-module-image-filter=1.27.5-r1
+nginx-module-njs=1.27.5.0.8.10-r1
+nginx-module-xslt=1.27.5-r1
+tzdata

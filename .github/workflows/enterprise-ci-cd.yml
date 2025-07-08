@@ -1,0 +1,532 @@
+name: Scorpius Enterprise CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop, 'feature/*', 'release/*' ]
+  pull_request:
+    branches: [ main, develop ]
+  release:
+    types: [ created ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+
+jobs:
+  # Security and Code Quality Analysis
+  security-scan:
+    name: Security Analysis
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Cache pip dependencies
+      uses: actions/cache@v3
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-pip-
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install bandit safety semgrep
+        find . -name "requirements*.txt" -exec pip install -r {} \;
+
+    - name: Run Bandit security scan
+      run: |
+        bandit -r . -f json -o bandit-report.json || true
+        bandit -r . -f txt
+
+    - name: Run Safety dependency check
+      run: |
+        safety check --json --output safety-report.json || true
+        safety check
+
+    - name: Run Semgrep security scan
+      run: |
+        semgrep --config=auto --json --output=semgrep-report.json . || true
+        semgrep --config=auto .
+
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          bandit-report.json
+          safety-report.json
+          semgrep-report.json
+
+  # Code Quality and Linting
+  code-quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install black isort flake8 mypy
+        find . -name "requirements*.txt" -exec pip install -r {} \;
+
+    - name: Run Black formatter check
+      run: black --check --diff .
+
+    - name: Run isort import sorting check
+      run: isort --check-only --diff .
+
+    - name: Run flake8 linting
+      run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+    - name: Run mypy type checking
+      run: mypy . --ignore-missing-imports
+
+  # Unit and Integration Tests
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    needs: [security-scan, code-quality]
+    
+    strategy:
+      matrix:
+        test-type: [unit, integration, security]
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: scorpius_test
+          POSTGRES_USER: scorpius
+          POSTGRES_PASSWORD: test_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        find . -name "requirements*.txt" -exec pip install -r {} \;
+        pip install pytest pytest-asyncio pytest-cov pytest-mock
+
+    - name: Set up test environment
+      run: |
+        cp .env.example .env
+        echo "DATABASE_URL=postgresql://scorpius:test_password@localhost:5432/scorpius_test" >> .env
+        echo "REDIS_URL=redis://localhost:6379" >> .env
+        echo "JWT_SECRET=test-jwt-secret-key-for-ci-testing" >> .env
+        echo "ENVIRONMENT=test" >> .env
+
+    - name: Run unit tests
+      if: matrix.test-type == 'unit'
+      run: |
+        pytest tests/unit/ -v --cov=backend --cov-report=xml --cov-report=html --cov-fail-under=80
+        
+    - name: Run integration tests
+      if: matrix.test-type == 'integration'
+      run: |
+        pytest tests/integration/ -v --tb=short
+
+    - name: Run security tests
+      if: matrix.test-type == 'security'
+      run: |
+        pytest tests/security/ -v --tb=short
+
+    - name: Upload coverage reports
+      if: matrix.test-type == 'unit'
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+
+    - name: Upload test artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results-${{ matrix.test-type }}
+        path: |
+          htmlcov/
+          .coverage
+          pytest-report.xml
+
+  # Container Security Scanning
+  container-security:
+    name: Container Security
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build test image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend/api-gateway
+        push: false
+        tags: scorpius-test:latest
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: 'scorpius-test:latest'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+    - name: Generate SBOM
+      uses: anchore/sbom-action@v0
+      with:
+        image: scorpius-test:latest
+        format: cyclonedx-json
+        output-file: sbom.json
+
+    - name: Upload SBOM
+      uses: actions/upload-artifact@v3
+      with:
+        name: sbom
+        path: sbom.json
+
+  # Build and Push Images
+  build:
+    name: Build and Push
+    runs-on: ubuntu-latest
+    needs: [test, container-security]
+    if: github.event_name != 'pull_request'
+    outputs:
+      image-tag: ${{ steps.image.outputs.tag }}
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v5
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=ref,event=pr
+          type=sha,prefix=sha-
+          type=raw,value=latest,enable={{is_default_branch}}
+
+    - name: Build and push API Gateway image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./backend/api-gateway
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        platforms: linux/amd64,linux/arm64
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+
+    - name: Sign container image
+      run: |
+        echo "${{ secrets.COSIGN_PRIVATE_KEY }}" > cosign.key
+        cosign sign --key cosign.key ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+      env:
+        COSIGN_PASSWORD: ${{ secrets.COSIGN_PASSWORD }}
+
+    - name: Set image tag output
+      id: image
+      run: echo "tag=${{ github.sha }}" >> $GITHUB_OUTPUT
+
+  # Infrastructure as Code Validation
+  infrastructure:
+    name: Infrastructure Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: 1.6.0
+
+    - name: Terraform Format Check
+      run: terraform fmt -check -recursive deploy/
+
+    - name: Terraform Validate
+      run: |
+        cd deploy/eks
+        terraform init -backend=false
+        terraform validate
+
+    - name: Run Checkov security scan
+      uses: bridgecrewio/checkov-action@master
+      with:
+        directory: deploy/
+        framework: terraform,kubernetes,dockerfile
+        output_format: sarif
+        output_file_path: checkov-results.sarif
+        quiet: true
+
+    - name: Upload Checkov results
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: checkov-results.sarif
+
+  # Performance Testing
+  performance:
+    name: Performance Testing
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        pip install locust requests
+
+    - name: Start test environment
+      run: |
+        docker-compose -f docker-compose.test.yml up -d
+        sleep 30
+
+    - name: Run performance tests
+      run: |
+        cd tests/performance
+        locust -f locustfile.py --headless \
+          --users 100 --spawn-rate 10 --run-time 5m \
+          --host http://localhost:8000 \
+          --html performance-report.html \
+          --csv performance-results
+
+    - name: Upload performance reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-reports
+        path: |
+          tests/performance/performance-report.html
+          tests/performance/performance-results*.csv
+
+  # Deploy to Staging
+  deploy-staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [build, infrastructure, performance]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.28.0'
+
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --region us-west-2 --name scorpius-staging
+
+    - name: Deploy to staging
+      run: |
+        # Update image tags in Kubernetes manifests
+        sed -i "s/IMAGE_TAG/${{ needs.build.outputs.image-tag }}/g" deploy/kubernetes/*.yaml
+        
+        # Apply Kubernetes manifests
+        kubectl apply -f deploy/kubernetes/ -n scorpius-staging
+
+    - name: Wait for deployment
+      run: |
+        kubectl rollout status deployment/api-gateway -n scorpius-staging --timeout=600s
+
+    - name: Run smoke tests
+      run: |
+        python tests/smoke/smoke_tests.py --environment staging --timeout 300
+
+    - name: Notify deployment
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#deployments'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow
+
+  # Deploy to Production
+  deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [build, infrastructure]
+    if: github.event_name == 'release'
+    environment: production
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
+    - name: Set up kubectl
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.28.0'
+
+    - name: Update kubeconfig
+      run: |
+        aws eks update-kubeconfig --region us-west-2 --name scorpius-production
+
+    - name: Blue-Green Deployment
+      run: |
+        # Update image tags
+        sed -i "s/IMAGE_TAG/${{ needs.build.outputs.image-tag }}/g" deploy/kubernetes/*.yaml
+        
+        # Deploy to green environment
+        kubectl apply -f deploy/kubernetes/ -n scorpius-production-green
+
+    - name: Health check green environment
+      run: |
+        python tests/smoke/health_check.py --environment production-green --timeout 600
+
+    - name: Switch traffic to green
+      run: |
+        kubectl patch service api-gateway-service -n scorpius-production \
+          -p '{"spec":{"selector":{"version":"green"}}}'
+
+    - name: Final health check
+      run: |
+        python tests/smoke/health_check.py --environment production --timeout 300
+
+    - name: Clean up blue environment
+      run: |
+        kubectl delete deployment -l version=blue -n scorpius-production
+
+    - name: Notify production deployment
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        channel: '#production'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        text: |
+          🚀 Production deployment completed successfully!
+          Release: ${{ github.ref }}
+          Image: ${{ needs.build.outputs.image-tag }}
+
+  # Security Monitoring
+  security-monitoring:
+    name: Security Monitoring
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production]
+    if: always()
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run OWASP ZAP security scan
+      uses: zaproxy/action-full-scan@v0.7.0
+      with:
+        target: 'https://staging.scorpius.example.com'
+        rules_file_name: '.zap/rules.tsv'
+        cmd_options: '-a'
+
+    - name: Upload ZAP scan results
+      uses: actions/upload-artifact@v3
+      with:
+        name: zap-security-scan
+        path: report_html.html
+
+  # Cleanup
+  cleanup:
+    name: Cleanup
+    runs-on: ubuntu-latest
+    needs: [deploy-staging, deploy-production, security-monitoring]
+    if: always()
+    
+    steps:
+    - name: Clean up old container images
+      run: |
+        echo "Cleaning up old images..."
+        # This would implement cleanup logic for old container images
+        
+    - name: Archive deployment logs
+      run: |
+        echo "Archiving deployment logs..."
+        # This would implement log archival logic

@@ -716,6 +716,65 @@ export default function TimeMachine() {
       status: "completed",
       currentStep: 0,
     },
+    {
+      id: "curve-finance-2023",
+      name: "Curve Finance Re-entrancy",
+      date: "July 30, 2023",
+      description:
+        "Vyper compiler bug enabled re-entrancy attacks on Curve pools, leading to $73M stolen across multiple protocols.",
+      totalLoss: "$73M (ETH, alETH, msETH, pETH)",
+      exploitType: "reentrancy",
+      attackerAddress: "0x6ec21d1868743a44318c3c259a6d4953f9978538",
+      targetContract: "0x93054188d876f558f4a66B2EF1d97d16eDf0895B",
+      transactions: [
+        {
+          hash: "0xa84aa065ce61dbb1eb50ab6ae67fc31a9da50dd2c74eefd561661e16b68d8006",
+          blockNumber: 17806026,
+          timestamp: "2023-07-30 03:35:47",
+          from: "0x6ec21d1868743a44318c3c259a6d4953f9978538",
+          to: "0x93054188d876f558f4a66B2EF1d97d16eDf0895B",
+          value: "0 ETH",
+          gasUsed: "850,000",
+          gasPrice: "18 Gwei",
+          method: "exchange(uint256,uint256,uint256,uint256)",
+          description:
+            "Exploited Vyper compiler bug to enable re-entrancy on exchange",
+          impact: "Drained alETH/ETH pool using recursive exchange calls",
+          terminalInput:
+            "$ cast send 0x93054188 'exchange(uint256,uint256,uint256,uint256)' 0 1 8000000000000000000 0",
+          terminalOutput:
+            "VYPER BUG: Re-entrancy lock bypassed\nRECURSIVE CALL: exchange() -> fallback -> exchange()\nPOOL DRAIN: 11,460 alETH stolen\nCURVE POOL: $61.8M drained in single transaction",
+        },
+        {
+          hash: "0x77238a0f5b7d1e1ad1f999ce600000a2a83bc44b06de4e5b1b3eaacbef6c9ec7",
+          blockNumber: 17806027,
+          timestamp: "2023-07-30 03:36:23",
+          from: "0x6ec21d1868743a44318c3c259a6d4953f9978538",
+          to: "0x958cc92297e6f087f41a86125ba8e121f10c8b5d",
+          value: "0 ETH",
+          gasUsed: "750,000",
+          gasPrice: "18 Gwei",
+          method: "exchange(uint256,uint256,uint256,uint256)",
+          description:
+            "Second attack on msETH/ETH pool using same vulnerability",
+          impact:
+            "Exploited multiple Curve pools compiled with vulnerable Vyper",
+          terminalInput:
+            "$ python3 curve_reentrancy.py --pool msETH-ETH --amount 5000",
+          terminalOutput:
+            "TARGET: msETH/ETH pool (0x958cc92...)\nVYPER VERSION: 0.2.15-0.3.0 (vulnerable)\nREENTRANCY: exchange() -> callback -> exchange()\nSTOLEN: $11.2M from msETH pool\nTOTAL HAUL: $73M across all vulnerable pools",
+        },
+      ],
+      timeline: [
+        "03:35:47 - First attack on alETH/ETH pool",
+        "03:36:23 - Attack spreads to msETH/ETH pool",
+        "04:00:00 - Community discovers Vyper compiler bug",
+        "04:30:00 - All vulnerable pools identified and paused",
+        "Aug 1 - $73M total stolen across multiple protocols",
+      ],
+      status: "completed",
+      currentStep: 0,
+    },
   ]);
 
   const startExploitReplay = (exploit: FamousExploit) => {
@@ -942,7 +1001,10 @@ export default function TimeMachine() {
       </div>
 
       {/* Famous Exploits Section */}
-      <div className="border-t border-cyber-cyan/20 pt-8">
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
+      <div>
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-cyber-cyan mb-2 font-mono uppercase tracking-wide">
             Famous Blockchain Exploits
@@ -961,7 +1023,7 @@ export default function TimeMachine() {
               className={`cyber-card-enhanced group cursor-pointer transition-all duration-300 ${
                 replayState.currentExploit?.id === exploit.id
                   ? "ring-2 ring-cyber-cyan bg-cyber-cyan/10 scale-105"
-                  : "hover:scale-105"
+                  : "hover:scale-[1.002]"
               } ${
                 replayState.isReplaying &&
                 replayState.currentExploit?.id !== exploit.id

@@ -45,6 +45,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const initializeAuth = async () => {
       try {
+        // Development bypass - skip authentication in development mode
+        if (import.meta.env.DEV || window.location.hostname === "localhost") {
+          console.log("🔓 Development mode: Bypassing authentication");
+          // Set a mock user for development
+          setUser({
+            id: 1,
+            email: "dev@scorpius.local",
+            username: "developer",
+            full_name: "Development User",
+            is_active: true,
+            is_verified: true,
+            is_superuser: false,
+            subscription_tier: "enterprise",
+            created_at: new Date().toISOString(),
+            last_login: new Date().toISOString(),
+          });
+          setIsLoading(false);
+          return;
+        }
+
         if (authAPI.isAuthenticated()) {
           const userData = await authAPI.getCurrentUser();
           setUser(userData);

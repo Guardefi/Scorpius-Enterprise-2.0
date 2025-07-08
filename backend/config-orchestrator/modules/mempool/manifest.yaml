@@ -1,0 +1,39 @@
+name: mempool
+version: "1.0.0"
+description: "Mempool monitoring service for detecting MEV opportunities and transaction patterns"
+category: "monitoring"
+author: "Scorpius Team"
+tags:
+  - mempool
+  - ethereum
+  - mev
+  - monitoring
+dependencies:
+  - redis
+  - postgresql
+  - ethereum-node
+ports:
+  - 8007
+environment:
+  development:
+    mempoolRefreshRate: 5000
+    gasThreshold: 20
+    enableLogging: true
+    logLevel: "DEBUG"
+  production:
+    mempoolRefreshRate: 2000
+    gasThreshold: 50
+    enableLogging: false
+    logLevel: "INFO"
+security:
+  encryption_required:
+    - privateKey
+  vault_paths:
+    - "scorpius/mempool/credentials"
+deployment:
+  restart_policy: "unless-stopped"
+  health_check:
+    path: "/health"
+    interval: 30
+    timeout: 10
+    retries: 3

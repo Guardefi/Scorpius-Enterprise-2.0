@@ -120,6 +120,9 @@ export default function Bridge() {
         </Card>
       </div>
 
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
       {/* Multi-Chain Network Status */}
       <Card>
         <CardHeader>

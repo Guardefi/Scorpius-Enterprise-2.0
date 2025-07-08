@@ -1,8 +1,7 @@
 /**
  * Authentication API service for SCORPIUS frontend
  */
-const API_BASE_URL =
-  import.meta.env.VITE_API_URL || "http://localhost:8000";
+const API_BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 export interface LoginRequest {
   email: string;
@@ -73,12 +72,18 @@ class AuthAPI {
       if (response.status === 401 && this.accessToken) {
         const refreshed = await this.refreshToken();
         if (refreshed) {
-          // Retry original request with new token
-          config.headers = {
-            ...config.headers,
-            Authorization: `Bearer ${this.accessToken}`,
+          // Create a new config for retry with fresh token and body
+          const retryConfig: RequestInit = {
+            ...options, // Use original options (which includes the body)
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${this.accessToken}`, // Use new token
+              ...options.headers,
+            },
+            credentials: "include",
           };
-          const retryResponse = await fetch(url, config);
+
+          const retryResponse = await fetch(url, retryConfig);
           if (!retryResponse.ok) {
             throw new Error(`HTTP error! status: ${retryResponse.status}`);
           }
@@ -150,10 +155,22 @@ class AuthAPI {
         return false;
       }
 
-      const tokens = await this.makeRequest<AuthTokens>("/auth/refresh", {
+      // Use direct fetch to avoid infinite loop
+      const url = `${API_BASE_URL}/auth/refresh`;
+      const response = await fetch(url, {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
         body: JSON.stringify({ refresh_token: refreshToken }),
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const tokens: AuthTokens = await response.json();
 
       // Update stored tokens
       this.accessToken = tokens.access_token;

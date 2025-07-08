@@ -47,6 +47,7 @@ import {
   RotateCcw,
   FileText,
   Target,
+  Upload,
   Activity,
   Database,
   Settings,
@@ -59,9 +60,30 @@ import {
   chartAnimations,
   generateSampleData,
 } from "@/lib/chart-utils";
+import { StaticScannerSummary } from "@/components/scanner/StaticScannerSummary";
 
-// Import scanner API client
-import { scannerAPI, ScanResponse, Vulnerability } from "@/api/scanner";
+interface Vulnerability {
+  id: string;
+  severity: "Critical" | "High" | "Medium" | "Low" | "Info";
+  title: string;
+  description: string;
+  line?: number;
+  recommendation: string;
+}
+
+interface ScanResult {
+  contractAddress: string;
+  scanId: string;
+  status: "scanning" | "completed" | "failed";
+  progress: number;
+  vulnerabilities: Vulnerability[];
+  securityScore: number;
+  gasOptimization: number;
+  timestamp: string;
+  plugins?: string[];
+  currentPlugin?: string;
+  pluginStage?: string;
+}
 
 export default function Scanner() {
   const [scanResults, setScanResults] = useState<ScanResult[]>([]);
@@ -74,6 +96,7 @@ export default function Scanner() {
     "oyente",
     "securify",
   ]);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
 
   // Chart data
   const [vulnerabilityChart] = useState(
@@ -243,6 +266,43 @@ export default function Scanner() {
     }
   };
 
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
+
+    const validFiles = Array.from(files).filter((file) => {
+      const validExtensions = [".sol", ".vy", ".py", ".rs", ".js", ".ts"];
+      const extension = file.name
+        .toLowerCase()
+        .substring(file.name.lastIndexOf("."));
+      return validExtensions.includes(extension);
+    });
+
+    if (validFiles.length !== files.length) {
+      alert(
+        "Some files were skipped. Only .sol, .vy, .py, .rs, .js, .ts files are supported.",
+      );
+    }
+
+    setUploadedFiles((prev) => [...prev, ...validFiles]);
+
+    // Auto-populate source code from the first uploaded file
+    if (validFiles.length > 0 && !sourceCode) {
+      const firstFile = validFiles[0];
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        if (e.target?.result) {
+          setSourceCode(e.target.result as string);
+        }
+      };
+      reader.readAsText(firstFile);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="space-y-8">
       {/* Scanner Stats Header */}
@@ -321,6 +381,15 @@ export default function Scanner() {
         </Card>
       </div>
 
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
+      {/* Static Scanner Summary Widget */}
+      <StaticScannerSummary />
+
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Scanner Interface */}
         <Card className="cyber-card-enhanced group">
@@ -360,6 +429,72 @@ export default function Scanner() {
                 disabled={isScanning}
                 className="bg-black/70 border-cyber-cyan/30 text-white font-mono focus:border-cyber-cyan focus:ring-cyber-cyan/20 min-h-32"
               />
+            </div>
+
+            <div className="text-center text-cyber-cyan/60 text-sm">OR</div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-cyber-cyan">
+                Upload Contract Files
+              </label>
+              <div className="relative">
+                <input
+                  type="file"
+                  multiple
+                  accept=".sol,.vy,.py,.rs,.js,.ts"
+                  onChange={handleFileUpload}
+                  disabled={isScanning}
+                  className="hidden"
+                  id="contract-files"
+                />
+                <label
+                  htmlFor="contract-files"
+                  className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer transition-all duration-300 ${
+                    isScanning
+                      ? "border-cyber-cyan/20 bg-black/20 cursor-not-allowed"
+                      : "border-cyber-cyan/30 hover:border-cyber-cyan/50 bg-black/30 hover:bg-cyber-cyan/5"
+                  }`}
+                >
+                  <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                    <Upload className="w-8 h-8 mb-3 text-cyber-cyan/60" />
+                    <p className="mb-2 text-sm text-cyber-cyan/80 font-mono">
+                      <span className="font-semibold">Click to upload</span> or
+                      drag and drop
+                    </p>
+                    <p className="text-xs text-cyber-cyan/60 font-mono">
+                      .sol, .vy, .py, .rs, .js, .ts files
+                    </p>
+                  </div>
+                </label>
+              </div>
+              {uploadedFiles.length > 0 && (
+                <div className="space-y-2">
+                  <div className="text-xs text-cyber-cyan/80 font-mono">
+                    {uploadedFiles.length} file(s) uploaded:
+                  </div>
+                  <div className="max-h-24 overflow-y-auto space-y-1">
+                    {uploadedFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-cyber-cyan/5 border border-cyber-cyan/20 rounded text-xs"
+                      >
+                        <span className="text-cyber-cyan/80 font-mono truncate">
+                          {file.name} ({(file.size / 1024).toFixed(1)}KB)
+                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeFile(index)}
+                          disabled={isScanning}
+                          className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                        >
+                          ×
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="space-y-3">

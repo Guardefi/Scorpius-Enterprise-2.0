@@ -34,6 +34,9 @@ import {
   MonitorSpeaker,
   Brain,
 } from "lucide-react";
+import { BytecodeLab } from "@/components/bytecode/BytecodeLab";
+import { OnChainEventStream } from "@/components/dashboard/OnChainEventStream";
+import { EnvironmentVariablesModal } from "@/components/EnvironmentVariablesModal";
 
 // Health Monitor Component
 function HealthMonitor({
@@ -273,7 +276,20 @@ interface MempoolTransaction {
   riskLevel: "Low" | "Medium" | "High";
 }
 
-export default function Overview() {
+interface OverviewProps {
+  onNavigateToProfile?: () => void;
+  onNavigateToTab?: (tab: string) => void;
+}
+
+export default function Overview({
+  onNavigateToProfile,
+  onNavigateToTab,
+}: OverviewProps) {
+  // Environment variables modal state - only show on first login
+  const [showEnvModal, setShowEnvModal] = useState(() => {
+    return !localStorage.getItem("scorpius-env-setup-dismissed");
+  });
+
   // Health monitor states
   const [cpuUsage, setCpuUsage] = useState(34);
   const [memoryUsage, setMemoryUsage] = useState(67);
@@ -399,6 +415,21 @@ export default function Overview() {
         </Card>
       </div>
 
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
+      {/* Bytecode Lab Quick-Peek Widget */}
+      <BytecodeLab />
+
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
+      {/* On-Chain Event Stream Widget */}
+      <OnChainEventStream />
+
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
       {/* Secondary Analytics Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
         {/* Vertical System Health */}
@@ -487,19 +518,53 @@ export default function Overview() {
         </Card>
       </div>
 
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
       {/* Quick Action Shortcuts */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {[
-          { icon: Shield, label: "Security Scan", color: "blue-400" },
-          { icon: Zap, label: "MEV Monitor", color: "yellow-400" },
-          { icon: Eye, label: "Forensics", color: "green-400" },
-          { icon: Clock, label: "Time Machine", color: "purple-400" },
-          { icon: Target, label: "Honeypot", color: "red-400" },
-          { icon: Brain, label: "AI Analysis", color: "cyan-400" },
+          {
+            icon: Shield,
+            label: "Security Scan",
+            color: "blue-400",
+            tab: "scanner",
+          },
+          {
+            icon: Zap,
+            label: "MEV Monitor",
+            color: "yellow-400",
+            tab: "mev-ops",
+          },
+          {
+            icon: Eye,
+            label: "Forensics",
+            color: "green-400",
+            tab: "forensics",
+          },
+          {
+            icon: Clock,
+            label: "Time Machine",
+            color: "purple-400",
+            tab: "time-machine",
+          },
+          {
+            icon: Target,
+            label: "Honeypot",
+            color: "red-400",
+            tab: "honeypot",
+          },
+          {
+            icon: Brain,
+            label: "AI Analysis",
+            color: "cyan-400",
+            tab: "quantum",
+          },
         ].map((action, index) => (
           <Card
             key={index}
-            className="cyber-card-enhanced hover:scale-105 transition-all duration-300 cursor-pointer group"
+            className="cyber-card-enhanced hover:scale-[1.002] transition-all duration-300 cursor-pointer group"
+            onClick={() => onNavigateToTab?.(action.tab)}
           >
             <CardContent className="p-4 text-center">
               <action.icon
@@ -512,6 +577,9 @@ export default function Overview() {
           </Card>
         ))}
       </div>
+
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
 
       {/* Live Transaction Feed */}
       <Card className="cyber-card-enhanced">
@@ -562,6 +630,25 @@ export default function Overview() {
           </ScrollArea>
         </CardContent>
       </Card>
+
+      {/* Environment Variables Modal */}
+      <EnvironmentVariablesModal
+        open={showEnvModal}
+        onDismiss={() => {
+          setShowEnvModal(false);
+          localStorage.setItem("scorpius-env-setup-dismissed", "true");
+        }}
+        onTakeMeThere={() => {
+          setShowEnvModal(false);
+          localStorage.setItem("scorpius-env-setup-dismissed", "true");
+          onNavigateToProfile?.();
+        }}
+      />
+
+      {/* Blur overlay when modal is open */}
+      {showEnvModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" />
+      )}
     </div>
   );
 }

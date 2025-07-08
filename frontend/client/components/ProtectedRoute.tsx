@@ -22,6 +22,12 @@ export function ProtectedRoute({
   requiredTier,
   fallback,
 }: ProtectedRouteProps) {
+  // In development mode, always render children without authentication
+  if (import.meta.env.DEV || window.location.hostname === "localhost") {
+    console.log("���� ProtectedRoute: Development mode bypass");
+    return <>{children}</>;
+  }
+
   const { user, isAuthenticated, isLoading } = useAuth();
   const location = useLocation();
 

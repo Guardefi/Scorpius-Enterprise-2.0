@@ -89,7 +89,7 @@ export const BACKEND_CONFIGS: Record<BackendMode, BackendConfig> = {
     timeout: 30000, // Python backend may be slower
     retryAttempts: 5,
     retryDelay: 2000,
-    healthCheck: "/health",
+    healthCheck: "/api/health",
     apiVersion: "v1",
     enableCompression: true,
     maxPayloadSize: 10 * 1024 * 1024, // 10MB

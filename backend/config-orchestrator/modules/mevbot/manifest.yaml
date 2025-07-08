@@ -1,0 +1,50 @@
+name: mevbot
+version: "1.0.0"
+description: "Advanced MEV bot for arbitrage, sandwich attacks, and liquidations"
+category: "trading"
+author: "Scorpius Team"
+tags:
+  - mev
+  - arbitrage
+  - trading
+  - ethereum
+  - defi
+dependencies:
+  - redis
+  - postgresql
+  - ethereum-node
+  - mempool-service
+ports:
+  - 8015
+  - 9091
+environment:
+  development:
+    maxGasPrice: 100
+    minProfitThreshold: 0.01
+    slippageTolerance: 2.0
+    enableSandwich: false
+    enableArbitrage: true
+    enableLiquidation: false
+  production:
+    maxGasPrice: 200
+    minProfitThreshold: 0.05
+    slippageTolerance: 1.0
+    enableSandwich: true
+    enableArbitrage: true
+    enableLiquidation: true
+security:
+  encryption_required:
+    - privateKey
+  vault_paths:
+    - "scorpius/mevbot/credentials"
+    - "scorpius/mevbot/strategies"
+deployment:
+  restart_policy: "unless-stopped"
+  health_check:
+    path: "/health"
+    interval: 15
+    timeout: 5
+    retries: 5
+  resources:
+    memory: "512M"
+    cpu: "0.5"

@@ -1,55 +1,45 @@
-# api-gateway
+# Scorpius Enterprise API Gateway
 
-This is the api-gateway microservice for the Scorpius blockchain security platform.
+## Current Working Files
 
-## Description
+### Main Gateway
+- `enterprise_gateway.py` - **MAIN GATEWAY FILE** - Complete enterprise-grade API gateway with all services integrated
+- `sdk_endpoints.py` - Additional SDK endpoints for extended functionality
 
-[Add service description here]
-
-## Installation
-
-\\\ash
-# Install dependencies
-pip install -r requirements.txt
-
-# Or if using npm
-npm install
-\\\
+### Configuration
+- `.env` - Environment configuration
+- `requirements.txt` - Python dependencies
+- `Dockerfile` - Container configuration
 
 ## Usage
 
-\\\ash
-# Run the service
-python main.py
+### Start the Gateway
+```bash
+python -m uvicorn enterprise_gateway:app --host 0.0.0.0 --port 8080 --reload
+```
 
-# Or if using npm
-npm start
-\\\
+### Test the Gateway
+```bash
+curl http://localhost:8080/health
+```
 
-## Docker
+## Features
 
-\\\ash
-# Build the image
-docker build -t api-gateway .
+- ✅ 120+ API endpoints across all services
+- ✅ Enterprise security with JWT authentication
+- ✅ Rate limiting and audit logging
+- ✅ Real-time WebSocket support
+- ✅ Comprehensive error handling
+- ✅ Prometheus metrics integration
+- ✅ Complete frontend integration ready
 
-# Run the container
-docker run -p 8000:8000 api-gateway
-\\\
+## Integration
 
-## Environment Variables
+The gateway is fully integrated with:
+- Frontend React components
+- TypeScript API clients
+- React hooks for all services
+- Dashboard widgets
+- Real-time WebSocket connections
 
-- \LOG_LEVEL\: Logging level (default: INFO)
-- \REDIS_URL\: Redis connection URL
-- \DATABASE_URL\: PostgreSQL connection URL (if applicable)
-
-## API Endpoints
-
-[Document your API endpoints here]
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Run tests
-5. Submit a pull request
+All old and outdated gateway files have been removed to avoid confusion.

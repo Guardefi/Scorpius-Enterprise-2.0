@@ -54,7 +54,212 @@ export function createServer() {
   // Legacy demo route
   app.get("/api/demo", handleDemo);
 
-  // ==================== SCANNER ROUTES ====================
+  // ==================== AUTHENTICATION ROUTES ====================
+  // Mock authentication for development
+  const mockUsers = new Map();
+  const mockTokens = new Map();
+
+  // Helper function to generate mock tokens
+  function generateMockToken(userId: string) {
+    const token = `mock_token_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const refreshToken = `mock_refresh_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+    mockTokens.set(token, {
+      userId,
+      type: "access",
+      expires: Date.now() + 15 * 60 * 1000, // 15 minutes
+    });
+
+    mockTokens.set(refreshToken, {
+      userId,
+      type: "refresh",
+      expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return { access_token: token, refresh_token: refreshToken };
+  }
+
+  // Register endpoint
+  app.post("/api/auth/register", (req, res) => {
+    const { email, username, password, full_name } = req.body;
+
+    if (!email || !username || !password) {
+      return res.status(400).json({
+        detail: "Email, username, and password are required",
+      });
+    }
+
+    // Check if user already exists
+    for (const [id, user] of mockUsers) {
+      if (user.email === email || user.username === username) {
+        return res.status(400).json({
+          detail:
+            user.email === email
+              ? "Email already registered"
+              : "Username already taken",
+        });
+      }
+    }
+
+    // Create new user
+    const userId = `user_${Date.now()}`;
+    const newUser = {
+      id: parseInt(userId.split("_")[1]),
+      email,
+      username,
+      full_name: full_name || "",
+      is_active: true,
+      is_verified: true, // Auto-verify for demo
+      is_superuser: false,
+      subscription_tier: "free",
+      created_at: new Date().toISOString(),
+      last_login: null,
+    };
+
+    mockUsers.set(userId, { ...newUser, password });
+
+    res.status(201).json(newUser);
+  });
+
+  // Login endpoint
+  app.post("/api/auth/login", (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        detail: "Email and password are required",
+      });
+    }
+
+    // Find user
+    let foundUser = null;
+    let userId = null;
+    for (const [id, user] of mockUsers) {
+      if (user.email === email && user.password === password) {
+        foundUser = user;
+        userId = id;
+        break;
+      }
+    }
+
+    if (!foundUser) {
+      return res.status(401).json({
+        detail: "Incorrect email or password",
+      });
+    }
+
+    // Update last login
+    foundUser.last_login = new Date().toISOString();
+
+    // Generate tokens
+    const tokens = generateMockToken(userId);
+
+    res.json({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+      token_type: "bearer",
+    });
+  });
+
+  // Get current user endpoint
+  app.get("/api/auth/me", (req, res) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        detail: "Authorization header required",
+      });
+    }
+
+    const token = authHeader.substring(7);
+    const tokenData = mockTokens.get(token);
+
+    if (!tokenData || tokenData.expires < Date.now()) {
+      return res.status(401).json({
+        detail: "Invalid or expired token",
+      });
+    }
+
+    const user = mockUsers.get(tokenData.userId);
+    if (!user) {
+      return res.status(401).json({
+        detail: "User not found",
+      });
+    }
+
+    // Return user without password
+    const { password, ...userWithoutPassword } = user;
+    res.json(userWithoutPassword);
+  });
+
+  // Refresh token endpoint
+  app.post("/api/auth/refresh", (req, res) => {
+    const { refresh_token } = req.body;
+
+    if (!refresh_token) {
+      return res.status(400).json({
+        detail: "Refresh token required",
+      });
+    }
+
+    const tokenData = mockTokens.get(refresh_token);
+
+    if (
+      !tokenData ||
+      tokenData.type !== "refresh" ||
+      tokenData.expires < Date.now()
+    ) {
+      return res.status(401).json({
+        detail: "Invalid or expired refresh token",
+      });
+    }
+
+    // Generate new tokens
+    const tokens = generateMockToken(tokenData.userId);
+
+    // Remove old refresh token
+    mockTokens.delete(refresh_token);
+
+    res.json({
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+      token_type: "bearer",
+    });
+  });
+
+  // Logout endpoint
+  app.post("/api/auth/logout", (req, res) => {
+    const { refresh_token } = req.body;
+
+    if (refresh_token) {
+      mockTokens.delete(refresh_token);
+    }
+
+    res.json({ message: "Successfully logged out" });
+  });
+
+  // Other auth endpoints (simplified for demo)
+  app.post("/api/auth/verify-email", (req, res) => {
+    res.json({ message: "Email verified successfully" });
+  });
+
+  app.post("/api/auth/forgot-password", (req, res) => {
+    res.json({ message: "If the email exists, a reset link has been sent" });
+  });
+
+  app.post("/api/auth/reset-password", (req, res) => {
+    res.json({ message: "Password reset successfully" });
+  });
+
+  // ==================== NEW API ROUTES ====================
+  // Import and use the new API routes
+  try {
+    const apiRoutes = require("./routes/api").default;
+    app.use("/api", apiRoutes);
+  } catch (error) {
+    console.log("API routes not available, using legacy endpoints");
+  }
+
+  // ==================== SCANNER ROUTES (Legacy) ====================
   app.post("/api/scanner/scan", startContractScan);
   app.get("/api/scanner/results/:scanId", getScanResults);
   app.get("/api/scanner/history", getScanHistory);

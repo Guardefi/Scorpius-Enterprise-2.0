@@ -57,6 +57,8 @@ import {
   Droplets,
   Plus,
   X,
+  Bell,
+  ExternalLink,
 } from "lucide-react";
 import {
   chartColors,
@@ -64,6 +66,7 @@ import {
   chartAnimations,
   generateSampleData,
 } from "@/lib/chart-utils";
+import { CrossChainBridgeMonitor } from "@/components/mempool/CrossChainBridgeMonitor";
 
 interface MempoolTransaction {
   hash: string;
@@ -223,6 +226,184 @@ export default function Mempool() {
 
   return (
     <div className="space-y-8">
+      {/* Tracking Targets Section - Moved to Top */}
+      <Card className="cyber-card-enhanced group">
+        <CardHeader className="relative z-10">
+          <CardTitle className="flex items-center gap-2 cyber-glow">
+            <Target className="w-5 h-5 text-purple-400 group-hover:animate-cyber-pulse" />
+            TRACKING TARGETS
+          </CardTitle>
+          <CardDescription>
+            Monitor specific contracts, chains, or liquidity pools for
+            transactions
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* Add New Target Form */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-cyber-cyan/5 border border-cyber-cyan/20 rounded-lg">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-cyber-cyan">
+                Type
+              </label>
+              <Select
+                value={newTrackingTarget.type}
+                onValueChange={(value: any) =>
+                  setNewTrackingTarget((prev) => ({ ...prev, type: value }))
+                }
+              >
+                <SelectTrigger className="bg-black/70 border-cyber-cyan/30">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="contract">Smart Contract</SelectItem>
+                  <SelectItem value="chain">Blockchain</SelectItem>
+                  <SelectItem value="liquidity_pool">Liquidity Pool</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-cyber-cyan">
+                Name
+              </label>
+              <Input
+                placeholder={
+                  newTrackingTarget.type === "contract"
+                    ? "Contract Name"
+                    : newTrackingTarget.type === "chain"
+                      ? "Chain Name"
+                      : "Pool Name"
+                }
+                value={newTrackingTarget.name}
+                onChange={(e) =>
+                  setNewTrackingTarget((prev) => ({
+                    ...prev,
+                    name: e.target.value,
+                  }))
+                }
+                className="bg-black/70 border-cyber-cyan/30 text-white font-mono focus:border-cyber-cyan focus:ring-cyber-cyan/20"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-cyber-cyan">
+                {newTrackingTarget.type === "chain" ? "Chain" : "Address"}
+              </label>
+              <Input
+                placeholder={
+                  newTrackingTarget.type === "chain" ? "ethereum" : "0x..."
+                }
+                value={
+                  newTrackingTarget.type === "chain"
+                    ? newTrackingTarget.chain
+                    : newTrackingTarget.address
+                }
+                onChange={(e) =>
+                  setNewTrackingTarget((prev) => ({
+                    ...prev,
+                    [newTrackingTarget.type === "chain" ? "chain" : "address"]:
+                      e.target.value,
+                  }))
+                }
+                className="bg-black/70 border-cyber-cyan/30 text-white font-mono focus:border-cyber-cyan focus:ring-cyber-cyan/20"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-cyber-cyan">
+                Action
+              </label>
+              <Button
+                onClick={addTrackingTarget}
+                className="w-full btn-primary font-mono"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add Target
+              </Button>
+            </div>
+          </div>
+
+          {/* Active Tracking Targets */}
+          {trackingTargets.length > 0 && (
+            <div className="space-y-2">
+              <div className="text-sm font-medium text-cyber-cyan">
+                Active Targets ({trackingTargets.length})
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                {trackingTargets.map((target) => (
+                  <div
+                    key={target.id}
+                    className="p-3 bg-cyber-cyan/5 border border-cyber-cyan/20 rounded-lg"
+                  >
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center space-x-2">
+                        <Target className="w-4 h-4 text-purple-400" />
+                        <span className="font-medium text-cyber-cyan text-sm">
+                          {target.name}
+                        </span>
+                        <Badge
+                          variant="secondary"
+                          className="text-xs bg-purple-500/20 text-purple-400"
+                        >
+                          {target.type}
+                        </Badge>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeTrackingTarget(target.id)}
+                        className="h-6 w-6 p-0 text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                      >
+                        ×
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-3 gap-2 text-xs">
+                      <div>
+                        <div className="text-cyber-cyan/70 text-xs">
+                          Address
+                        </div>
+                        <div className="font-bold text-cyber-cyan font-mono truncate">
+                          {target.address || target.chain}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-cyber-cyan/70 text-xs">
+                          Transactions
+                        </div>
+                        <div className="font-bold text-green-400">
+                          {target.totalTransactions}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-cyber-cyan/70 text-xs">
+                          Last Activity
+                        </div>
+                        <div className="font-bold text-blue-400 text-xs">
+                          {target.lastActivity}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {trackingTargets.length === 0 && (
+            <div className="text-center py-8 text-cyber-cyan/60">
+              <Target className="w-12 h-12 mx-auto mb-3 text-cyber-cyan/40" />
+              <p className="text-sm">
+                No tracking targets configured. Add a contract, chain, or
+                liquidity pool above to start monitoring.
+              </p>
+            </div>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
       {/* Real-time Network Intelligence Header */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
         <Card className="text-center">
@@ -299,6 +480,9 @@ export default function Mempool() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
 
       {/* Advanced Network Analytics */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
@@ -401,252 +585,159 @@ export default function Mempool() {
         </Card>
       </div>
 
-      {/* Tracking Targets Section */}
-      <Card className="cyber-card-enhanced group">
-        <CardHeader className="relative z-10">
-          <CardTitle className="flex items-center gap-2 cyber-glow">
-            <Target className="w-5 h-5 text-purple-400 group-hover:animate-cyber-pulse" />
-            TRACKING TARGETS
-          </CardTitle>
-          <CardDescription>
-            Monitor specific contracts, chains, or liquidity pools for
-            transactions
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Add New Target Form */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-cyber-cyan/5 border border-cyber-cyan/20 rounded-lg">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-cyber-cyan">
-                Type
-              </label>
-              <Select
-                value={newTrackingTarget.type}
-                onValueChange={(value: any) =>
-                  setNewTrackingTarget((prev) => ({ ...prev, type: value }))
-                }
-              >
-                <SelectTrigger className="bg-black/70 border-cyber-cyan/30">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="contract">Smart Contract</SelectItem>
-                  <SelectItem value="chain">Blockchain</SelectItem>
-                  <SelectItem value="liquidity_pool">Liquidity Pool</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-cyber-cyan">
-                Name
-              </label>
-              <Input
-                placeholder={
-                  newTrackingTarget.type === "contract"
-                    ? "Uniswap Router"
-                    : newTrackingTarget.type === "chain"
-                      ? "Ethereum"
-                      : "ETH/USDC Pool"
-                }
-                value={newTrackingTarget.name}
-                onChange={(e) =>
-                  setNewTrackingTarget((prev) => ({
-                    ...prev,
-                    name: e.target.value,
-                  }))
-                }
-                className="bg-black/70 border-cyber-cyan/30 text-white"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-cyber-cyan">
-                {newTrackingTarget.type === "chain" ? "Chain ID" : "Address"}
-              </label>
-              <Input
-                placeholder={
-                  newTrackingTarget.type === "chain" ? "ethereum" : "0x..."
-                }
-                value={newTrackingTarget.address}
-                onChange={(e) =>
-                  setNewTrackingTarget((prev) => ({
-                    ...prev,
-                    address: e.target.value,
-                  }))
-                }
-                className="bg-black/70 border-cyber-cyan/30 text-white font-mono"
-              />
-            </div>
-
-            <div className="flex items-end">
-              <Button
-                onClick={addTrackingTarget}
-                disabled={
-                  !newTrackingTarget.name.trim() ||
-                  !newTrackingTarget.address.trim()
-                }
-                className="w-full btn-primary"
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Target
-              </Button>
-            </div>
-          </div>
-
-          {/* Active Targets List */}
-          {trackingTargets.length > 0 && (
-            <div className="space-y-3">
-              <h3 className="text-sm font-semibold text-cyber-cyan uppercase tracking-wide">
-                Active Targets ({trackingTargets.length})
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {trackingTargets.map((target) => (
-                  <div
-                    key={target.id}
-                    className="p-4 bg-cyber-cyan/5 border border-cyber-cyan/20 rounded-lg relative group hover:bg-cyber-cyan/10 transition-colors"
-                  >
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => removeTrackingTarget(target.id)}
-                      className="absolute top-2 right-2 h-6 w-6 p-0 text-red-400 hover:text-red-300"
-                    >
-                      <X className="h-3 w-3" />
-                    </Button>
-
-                    <div className="flex items-center gap-2 mb-3">
-                      {target.type === "contract" && (
-                        <Hash className="w-4 h-4 text-blue-400" />
-                      )}
-                      {target.type === "chain" && (
-                        <Globe className="w-4 h-4 text-green-400" />
-                      )}
-                      {target.type === "liquidity_pool" && (
-                        <Droplets className="w-4 h-4 text-purple-400" />
-                      )}
-                      <span className="font-medium text-cyber-cyan">
-                        {target.name}
-                      </span>
-                      <div
-                        className={`w-2 h-2 rounded-full ${
-                          target.isActive ? "bg-green-400" : "bg-gray-400"
-                        } animate-pulse`}
-                      />
-                    </div>
-
-                    <div className="space-y-2 text-sm">
-                      <div className="text-cyber-cyan/70">
-                        {target.type === "chain" ? "Chain:" : "Address:"}
-                      </div>
-                      <code className="text-xs bg-black/50 px-2 py-1 rounded text-cyan-300 block break-all">
-                        {target.address}
-                      </code>
-
-                      <div className="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-cyber-cyan/20">
-                        <div>
-                          <div className="text-cyber-cyan/70 text-xs">
-                            Transactions
-                          </div>
-                          <div className="font-bold text-green-400">
-                            {target.totalTransactions}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-cyber-cyan/70 text-xs">
-                            Last Activity
-                          </div>
-                          <div className="font-bold text-blue-400 text-xs">
-                            {target.lastActivity}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {trackingTargets.length === 0 && (
-            <div className="text-center py-8 text-cyber-cyan/60">
-              <Target className="w-12 h-12 mx-auto mb-3 text-cyber-cyan/40" />
-              <p className="text-sm">
-                No tracking targets configured. Add a contract, chain, or
-                liquidity pool above to start monitoring.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Monitor Controls */}
+        {/* Global Alerts System */}
         <Card className="cyber-card-enhanced group">
           <CardHeader className="relative z-10">
             <CardTitle className="flex items-center gap-2 cyber-glow">
-              <Activity className="w-5 h-5 text-cyber-cyan group-hover:animate-cyber-pulse" />
-              MEMPOOL MONITOR
+              <Bell className="w-5 h-5 text-red-400 group-hover:animate-cyber-pulse" />
+              GLOBAL ALERTS
+              <Badge className="bg-red-500/20 text-red-400 border-red-500/30 animate-pulse">
+                3
+              </Badge>
             </CardTitle>
             <CardDescription>
-              Real-time monitoring of pending transactions and MEV opportunities
+              Configure wallet alerts and monitor high-risk activities
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* Watch Wallet Form */}
+            <div className="space-y-3 p-4 bg-red-500/5 border border-red-500/20 rounded-lg">
+              <div className="text-sm font-medium text-red-400">
+                Watch a Wallet
+              </div>
+              <div className="space-y-2">
+                <Input
+                  placeholder="0x... or ENS name"
+                  className="bg-black/70 border-red-500/30 text-white font-mono focus:border-red-500 focus:ring-red-500/20"
+                />
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-red-400/70">
+                    Risk Threshold
+                  </span>
+                  <span className="text-xs text-red-400">≥ 70%</span>
+                </div>
+                <input
+                  type="range"
+                  min="10"
+                  max="100"
+                  defaultValue="70"
+                  className="w-full h-2 bg-black/50 rounded-lg appearance-none cursor-pointer"
+                />
+                <Button className="w-full btn-primary bg-red-500 hover:bg-red-600 text-white font-mono text-xs">
+                  <Plus className="w-3 h-3 mr-1" />
+                  Add Alert
+                </Button>
+              </div>
+            </div>
+
+            {/* Watched Addresses */}
+            <div className="space-y-2">
+              <div className="text-sm font-medium text-cyber-cyan">
+                Watched Addresses (2)
+              </div>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between p-2 bg-cyber-cyan/5 border border-cyber-cyan/20 rounded">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                    <span className="text-xs font-mono text-cyber-cyan">
+                      0xAbC...123
+                    </span>
+                    <Badge className="text-xs bg-red-500/20 text-red-400">
+                      ≥70%
+                    </Badge>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-cyber-cyan"
+                    >
+                      ✏️
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-red-400"
+                    >
+                      🗑️
+                    </Button>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-amber-500/5 border border-amber-500/20 rounded">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                    <span className="text-xs font-mono text-cyber-cyan">
+                      alice.eth
+                    </span>
+                    <Badge className="text-xs bg-amber-500/20 text-amber-400">
+                      ≥50%
+                    </Badge>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-cyber-cyan"
+                    >
+                      ✏️
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-6 w-6 p-0 text-red-400"
+                    >
+                      🗑️
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Recent Alerts */}
+            <div className="space-y-2">
+              <div className="text-sm font-medium text-red-400">
+                Recent Alerts
+              </div>
+              <div className="space-y-1 max-h-32 overflow-y-auto">
+                <div className="flex items-center justify-between p-2 bg-red-500/10 border border-red-500/20 rounded text-xs">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                    <span className="text-red-400 font-mono">
+                      HIGH-RISK TX 0xFf...123
+                    </span>
+                  </div>
+                  <span className="text-red-400/70">3s ago</span>
+                </div>
+                <div className="flex items-center justify-between p-2 bg-amber-500/10 border border-amber-500/20 rounded text-xs">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 rounded-full bg-amber-500"></div>
+                    <span className="text-amber-400 font-mono">
+                      MED-RISK TX 0xEe...456
+                    </span>
+                  </div>
+                  <span className="text-amber-400/70">12s ago</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Alert Actions */}
             <div className="flex gap-2">
               <Button
-                onClick={() => setIsMonitoring(!isMonitoring)}
-                variant={isMonitoring ? "destructive" : "default"}
-                className="flex-1"
+                variant="outline"
+                size="sm"
+                className="flex-1 btn-secondary font-mono text-xs"
               >
-                {isMonitoring ? (
-                  <>
-                    <Pause className="w-4 h-4 mr-2" />
-                    Stop Monitoring
-                  </>
-                ) : (
-                  <>
-                    <Play className="w-4 h-4 mr-2" />
-                    Start Monitoring
-                  </>
-                )}
+                <ExternalLink className="w-3 h-3 mr-1" />
+                Send to Slack
               </Button>
               <Button
                 variant="outline"
-                onClick={() => {
-                  setMempoolTransactions([]);
-                  setMevOpportunities(0);
-                }}
+                size="sm"
+                className="flex-1 btn-secondary font-mono text-xs"
               >
-                <RotateCcw className="w-4 h-4" />
+                ✅ Acknowledge All
               </Button>
-            </div>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                <span className="text-sm">Status</span>
-                <div className="flex items-center gap-2">
-                  <div
-                    className={`w-2 h-2 rounded-full ${isMonitoring ? "bg-green-500" : "bg-gray-500"}`}
-                  />
-                  <span className="text-sm">
-                    {isMonitoring ? "Monitoring" : "Stopped"}
-                  </span>
-                </div>
-              </div>
-
-              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                <span className="text-sm">Transactions</span>
-                <span className="font-bold">{mempoolTransactions.length}</span>
-              </div>
-
-              <div className="flex justify-between items-center p-3 bg-muted rounded-lg">
-                <span className="text-sm">MEV Opportunities</span>
-                <div className="flex items-center gap-2">
-                  <span className="font-bold">{mevOpportunities}</span>
-                  <TrendingUp className="w-4 h-4 text-green-500" />
-                </div>
-              </div>
             </div>
           </CardContent>
         </Card>
@@ -775,6 +866,9 @@ export default function Mempool() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Cross-Chain Bridge Monitor */}
+      <CrossChainBridgeMonitor />
     </div>
   );
 }

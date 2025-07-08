@@ -134,16 +134,8 @@ export default function MEVOps() {
 
   return (
     <div className="space-y-8">
-      {/* MEV OPS Header */}
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-cyber-cyan mb-2 font-mono uppercase tracking-wide">
-          MEV Operations Center
-        </h2>
-        <p className="text-cyber-cyan/60 text-sm">
-          Full-spectrum MEV warfare: Attack vectors and defensive
-          countermeasures in unified command center
-        </p>
-      </div>
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
 
       {/* Sub-tabs for Attack and Defense */}
       <Tabs defaultValue="attack" className="w-full">

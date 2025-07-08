@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  api-gateway:
+    build: .
+    container_name: scorpius-api-gateway
+    ports:
+      - "8000:8000"
+    environment:
+      - API_GATEWAY_PORT=8000
+      - API_GATEWAY_HOST=0.0.0.0
+      - AUTH_SERVICE_URL=http://auth-service:8001
+      - SCANNER_SERVICE_URL=http://scanner-service:8002
+      - QUANTUM_SERVICE_URL=http://quantum-service:8003
+      - MEV_PROTECTION_SERVICE_URL=http://mev-protection-service:8004
+      - WALLET_GUARD_SERVICE_URL=http://wallet-guard-service:8005
+      - HONEYPOT_SERVICE_URL=http://honeypot-service:8006
+      - MEMPOOL_SERVICE_URL=http://mempool-service:8007
+      - BYTECODE_SERVICE_URL=http://bytecode-service:8008
+      - SIMULATION_SERVICE_URL=http://simulation-service:8009
+      - REPORTING_SERVICE_URL=http://reporting-service:8010
+      - AI_FORENSICS_SERVICE_URL=http://ai-forensics-service:8011
+      - TIME_MACHINE_SERVICE_URL=http://time-machine-service:8012
+      - EXPLOIT_TESTING_SERVICE_URL=http://exploit-testing-service:8013
+      - BRIDGE_SERVICE_URL=http://bridge-service:8014
+      - MEV_BOT_SERVICE_URL=http://mev-bot-service:8015
+      - QUANTUM_CRYPTO_SERVICE_URL=http://quantum-crypto-service:8016
+      - SETTINGS_SERVICE_URL=http://settings-service:8017
+      - DASHBOARD_SERVICE_URL=http://dashboard-service:8018
+      - MONITORING_SERVICE_URL=http://monitoring-service:8019
+      - INTEGRATION_HUB_SERVICE_URL=http://integration-hub-service:8020
+      - CORS_ORIGINS=["http://localhost:3000", "http://localhost:5173"]
+      - LOG_LEVEL=INFO
+    networks:
+      - scorpius-network
+    depends_on:
+      - auth-service
+      - scanner-service
+      - quantum-service
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  scorpius-network:
+    external: true

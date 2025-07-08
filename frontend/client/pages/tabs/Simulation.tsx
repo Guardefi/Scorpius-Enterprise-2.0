@@ -12,7 +12,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PageHeader } from "@/components/PageHeader";
 import { PageLayout } from "@/components/PageLayout";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Progress } from "@/components/ui/progress";
@@ -47,6 +46,7 @@ import {
   Gauge,
 } from "lucide-react";
 import { StorageManager } from "@/lib/storage";
+import { SimulationEngineDashboard } from "@/components/simulation/SimulationEngineDashboard";
 
 // Attack type definitions
 interface AttackType {
@@ -88,7 +88,7 @@ interface SimulationResult {
 
 export default function Simulation() {
   const [contractAddress, setContractAddress] = useState("");
-  const [selectedAttack, setSelectedAttack] = useState<string>("");
+  const [selectedAttacks, setSelectedAttacks] = useState<string[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [progress, setProgress] = useState(0);
   const [simulationResult, setSimulationResult] =
@@ -197,8 +197,10 @@ export default function Simulation() {
   }, []);
 
   const runSimulation = async () => {
-    if (!contractAddress.trim() || !selectedAttack) {
-      toast.error("Please enter a contract address and select an attack type");
+    if (!contractAddress.trim() || selectedAttacks.length === 0) {
+      toast.error(
+        "Please enter a contract address and select at least one attack type",
+      );
       return;
     }
 
@@ -283,12 +285,13 @@ export default function Simulation() {
   };
 
   const generateMockResult = (): SimulationResult => {
-    const attack = attackTypes.find((a) => a.id === selectedAttack)!;
+    const primaryAttack = selectedAttacks[0];
+    const attack = attackTypes.find((a) => a.id === primaryAttack)!;
     const vulnerabilityFound = Math.random() > 0.3;
     const success = vulnerabilityFound && Math.random() > 0.2;
 
     return {
-      attackType: selectedAttack,
+      attackType: selectedAttacks.join(", "), // Show all selected attacks
       contractAddress,
       status: success ? "success" : vulnerabilityFound ? "partial" : "blocked",
       vulnerabilityFound,
@@ -359,7 +362,7 @@ export default function Simulation() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `simulation-${selectedAttack}-${Date.now()}.json`;
+    a.download = `simulation-${selectedAttacks.join("_")}-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
     toast.success("Results exported");
@@ -380,6 +383,118 @@ export default function Simulation() {
     }
   };
 
+  const runAISimulation = async () => {
+    if (!contractAddress.trim()) {
+      toast.error("Please enter a contract address for AI analysis");
+      return;
+    }
+
+    setIsRunning(true);
+    setProgress(0);
+    setCurrentStep(0);
+    setSimulationResult(null);
+    setSimulationLog([]);
+
+    try {
+      const aiSteps = [
+        "Initializing AI security analysis...",
+        "Performing static code analysis with AI models...",
+        "Running dynamic pattern recognition...",
+        "Cross-referencing vulnerability databases...",
+        "Generating AI-powered security assessment...",
+      ];
+
+      for (let i = 0; i < aiSteps.length; i++) {
+        setSimulationLog((prev) => [...prev, aiSteps[i]]);
+        setCurrentStep(i);
+
+        if (!isRunning) break;
+
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+        setProgress(((i + 1) / aiSteps.length) * 100);
+      }
+
+      if (!isRunning) return;
+
+      // Generate AI-specific result
+      const aiResult = generateAIResult();
+      setSimulationResult(aiResult);
+
+      const newHistory = [aiResult, ...simulationHistory.slice(0, 9)];
+      setSimulationHistory(newHistory);
+      StorageManager.setSimulationHistory(newHistory);
+
+      toast.success("AI simulation completed successfully");
+    } catch (error) {
+      console.error("AI simulation failed:", error);
+      toast.error("AI simulation failed to execute");
+    } finally {
+      setIsRunning(false);
+      setProgress(100);
+    }
+  };
+
+  const generateAIResult = (): SimulationResult => {
+    const aiAttacks = [
+      "ai_pattern_analysis",
+      "smart_contract_audit",
+      "vulnerability_detection",
+    ];
+    const aiAttack = aiAttacks[Math.floor(Math.random() * aiAttacks.length)];
+    const vulnerabilityFound = Math.random() > 0.2; // AI is more likely to find issues
+    const success = vulnerabilityFound && Math.random() > 0.15;
+
+    return {
+      attackType: aiAttack,
+      contractAddress,
+      status: success ? "success" : vulnerabilityFound ? "partial" : "blocked",
+      vulnerabilityFound,
+      exploitableValue: vulnerabilityFound ? Math.random() * 150000 : 0,
+      gasUsed: Math.floor(Math.random() * 200000) + 50000,
+      transactions: [
+        {
+          type: "ai_analysis",
+          hash: `0x${Math.random().toString(16).substr(2, 64)}`,
+          success: true,
+          value: "0",
+          gasUsed: 25000,
+        },
+        {
+          type: "pattern_detection",
+          hash: `0x${Math.random().toString(16).substr(2, 64)}`,
+          success: success,
+          value: success ? (Math.random() * 15).toFixed(4) : "0",
+          gasUsed: Math.floor(Math.random() * 150000) + 50000,
+        },
+      ],
+      timeline: [
+        {
+          step: "AI Pattern Analysis",
+          description: `AI models analyzed ${contractAddress} for security patterns`,
+          timestamp: new Date(Date.now() - 7000),
+          status: "success",
+        },
+        {
+          step: "Vulnerability Detection",
+          description: vulnerabilityFound
+            ? "AI detected potential vulnerabilities"
+            : "AI found no critical vulnerabilities",
+          timestamp: new Date(Date.now() - 3000),
+          status: vulnerabilityFound ? "warning" : "success",
+        },
+        {
+          step: "Security Assessment",
+          description: `AI generated comprehensive security report`,
+          timestamp: new Date(),
+          status: "success",
+        },
+      ],
+      riskScore:
+        Math.floor(Math.random() * 40) + (vulnerabilityFound ? 60 : 20),
+      executionTime: Math.floor(Math.random() * 120) + 30,
+    };
+  };
+
   const getSeverityColor = (severity: string) => {
     switch (severity) {
       case "critical":
@@ -397,12 +512,11 @@ export default function Simulation() {
 
   return (
     <PageLayout>
-      <PageHeader
-        title="Simulation Sandbox"
-        description="Test smart contract vulnerabilities in a safe, isolated environment"
-        icon={Target}
-        iconGradient="from-red-500 to-orange-600"
-      />
+      {/* Simulation Engine Dashboard */}
+      <SimulationEngineDashboard />
+
+      {/* Separator */}
+      <div className="cyber-divider my-8"></div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Main Simulation Panel */}
@@ -419,14 +533,61 @@ export default function Simulation() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label className="text-cyber-cyan">Contract Address</Label>
-                <Input
-                  placeholder="0x..."
-                  value={contractAddress}
-                  onChange={(e) => setContractAddress(e.target.value)}
-                  className="font-mono bg-black/70 border-cyber-cyan/30 text-white focus:border-cyber-cyan focus:ring-cyber-cyan/20"
-                />
+              <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+                <div className="lg:col-span-3 space-y-2">
+                  <Label className="text-cyber-cyan">Contract Address</Label>
+                  <Input
+                    placeholder="0x..."
+                    value={contractAddress}
+                    onChange={(e) => setContractAddress(e.target.value)}
+                    className="font-mono bg-black/70 border-cyber-cyan/30 text-white focus:border-cyber-cyan focus:ring-cyber-cyan/20"
+                  />
+                </div>
+
+                <div className="lg:col-span-1 space-y-2">
+                  <Label className="text-cyber-cyan">Quick Actions</Label>
+                  <div className="space-y-2">
+                    <Button
+                      onClick={runSimulation}
+                      disabled={
+                        !contractAddress ||
+                        selectedAttacks.length === 0 ||
+                        isRunning
+                      }
+                      className="w-full btn-primary font-mono text-xs"
+                    >
+                      {isRunning ? (
+                        <>
+                          <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                          Running...
+                        </>
+                      ) : (
+                        <>
+                          <Play className="h-3 w-3 mr-1" />
+                          Run Simulation
+                        </>
+                      )}
+                    </Button>
+
+                    <Button
+                      onClick={runAISimulation}
+                      disabled={!contractAddress || isRunning}
+                      className="w-full btn-secondary font-mono text-xs"
+                    >
+                      {isRunning ? (
+                        <>
+                          <Loader2 className="h-3 w-3 mr-1 animate-spin" />
+                          AI Scanning...
+                        </>
+                      ) : (
+                        <>
+                          <Brain className="h-3 w-3 mr-1" />
+                          AI Scan
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                </div>
               </div>
 
               {contractAddress && (
@@ -450,7 +611,9 @@ export default function Simulation() {
                   <span>Attack Vector Selection</span>
                 </div>
                 <Badge variant="outline" className="text-xs text-cyber-cyan">
-                  {selectedAttack ? "1 Selected" : "None Selected"}
+                  {selectedAttacks.length > 0
+                    ? `${selectedAttacks.length} Selected`
+                    : "None Selected"}
                 </Badge>
               </CardTitle>
               <CardDescription className="text-cyber-cyan/60">
@@ -469,11 +632,18 @@ export default function Simulation() {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      setSelectedAttack("flash_loan");
-                      toast.success("Selected: Flash Loan Attack");
+                      if (selectedAttacks.includes("flash_loan")) {
+                        setSelectedAttacks((prev) =>
+                          prev.filter((id) => id !== "flash_loan"),
+                        );
+                        toast.info("Deselected: Flash Loan Attack");
+                      } else {
+                        setSelectedAttacks((prev) => [...prev, "flash_loan"]);
+                        toast.success("Selected: Flash Loan Attack");
+                      }
                     }}
                     className={
-                      selectedAttack === "flash_loan"
+                      selectedAttacks.includes("flash_loan")
                         ? "bg-red-500/20 border-red-500 text-red-400"
                         : "border-cyber-cyan/30 text-cyber-cyan hover:bg-cyber-cyan/10"
                     }
@@ -485,11 +655,18 @@ export default function Simulation() {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      setSelectedAttack("reentrancy");
-                      toast.success("Selected: Reentrancy Attack");
+                      if (selectedAttacks.includes("reentrancy")) {
+                        setSelectedAttacks((prev) =>
+                          prev.filter((id) => id !== "reentrancy"),
+                        );
+                        toast.info("Deselected: Reentrancy Attack");
+                      } else {
+                        setSelectedAttacks((prev) => [...prev, "reentrancy"]);
+                        toast.success("Selected: Reentrancy Attack");
+                      }
                     }}
                     className={
-                      selectedAttack === "reentrancy"
+                      selectedAttacks.includes("reentrancy")
                         ? "bg-red-500/20 border-red-500 text-red-400"
                         : "border-cyber-cyan/30 text-cyber-cyan hover:bg-cyber-cyan/10"
                     }
@@ -501,11 +678,21 @@ export default function Simulation() {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      setSelectedAttack("oracle_manipulation");
-                      toast.success("Selected: Oracle Manipulation");
+                      if (selectedAttacks.includes("oracle_manipulation")) {
+                        setSelectedAttacks((prev) =>
+                          prev.filter((id) => id !== "oracle_manipulation"),
+                        );
+                        toast.info("Deselected: Oracle Manipulation");
+                      } else {
+                        setSelectedAttacks((prev) => [
+                          ...prev,
+                          "oracle_manipulation",
+                        ]);
+                        toast.success("Selected: Oracle Manipulation");
+                      }
                     }}
                     className={
-                      selectedAttack === "oracle_manipulation"
+                      selectedAttacks.includes("oracle_manipulation")
                         ? "bg-red-500/20 border-red-500 text-red-400"
                         : "border-cyber-cyan/30 text-cyber-cyan hover:bg-cyber-cyan/10"
                     }
@@ -517,13 +704,13 @@ export default function Simulation() {
                     variant="outline"
                     size="sm"
                     onClick={() => {
-                      setSelectedAttack("");
-                      toast.info("Selection cleared");
+                      setSelectedAttacks([]);
+                      toast.info("All selections cleared");
                     }}
-                    disabled={!selectedAttack}
+                    disabled={selectedAttacks.length === 0}
                     className="border-cyber-cyan/30 text-cyber-cyan hover:bg-cyber-cyan/10"
                   >
-                    Clear
+                    Clear All ({selectedAttacks.length})
                   </Button>
                 </div>
               </div>
@@ -540,13 +727,20 @@ export default function Simulation() {
                   >
                     <Card
                       className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-cyber-cyan/30 bg-black/50 backdrop-blur-xl ${
-                        selectedAttack === attack.id
+                        selectedAttacks.includes(attack.id)
                           ? "ring-2 ring-red-500 border-red-500 bg-red-950/20"
                           : "hover:border-red-300"
                       }`}
                       onClick={() => {
-                        setSelectedAttack(attack.id);
-                        toast.success(`Selected: ${attack.name}`);
+                        if (selectedAttacks.includes(attack.id)) {
+                          setSelectedAttacks((prev) =>
+                            prev.filter((id) => id !== attack.id),
+                          );
+                          toast.info(`Deselected: ${attack.name}`);
+                        } else {
+                          setSelectedAttacks((prev) => [...prev, attack.id]);
+                          toast.success(`Selected: ${attack.name}`);
+                        }
                       }}
                     >
                       <CardHeader className="pb-3">
@@ -559,7 +753,7 @@ export default function Simulation() {
                               {attack.name}
                             </CardTitle>
                           </div>
-                          {selectedAttack === attack.id && (
+                          {selectedAttacks.includes(attack.id) && (
                             <CheckCircle className="h-5 w-5 text-green-500" />
                           )}
                         </div>
@@ -613,235 +807,6 @@ export default function Simulation() {
                   </motion.div>
                 ))}
               </div>
-            </CardContent>
-          </Card>
-
-          {/* Enhanced Simulation Control */}
-          <Card className="cyber-card-enhanced">
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2 cyber-glow">
-                <Play className="h-5 w-5" />
-                <span>Simulation Control Center</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Main Control Buttons */}
-              <div className="flex flex-wrap items-center gap-3">
-                <Button
-                  onClick={runSimulation}
-                  disabled={!contractAddress || !selectedAttack || isRunning}
-                  className="btn-primary font-mono uppercase tracking-wide"
-                >
-                  {isRunning ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Running...
-                    </>
-                  ) : (
-                    <>
-                      <Play className="h-4 w-4 mr-2" />
-                      Run Simulation
-                    </>
-                  )}
-                </Button>
-
-                {isRunning && (
-                  <>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setIsPaused(!isPaused);
-                        toast.info(
-                          isPaused ? "Simulation resumed" : "Simulation paused",
-                        );
-                      }}
-                      className="btn-secondary"
-                    >
-                      {isPaused ? (
-                        <>
-                          <Play className="h-4 w-4 mr-2" />
-                          Resume
-                        </>
-                      ) : (
-                        <>
-                          <Pause className="h-4 w-4 mr-2" />
-                          Pause
-                        </>
-                      )}
-                    </Button>
-
-                    <Button
-                      variant="outline"
-                      onClick={stopSimulation}
-                      className="btn-secondary"
-                    >
-                      <StopCircle className="h-4 w-4 mr-2" />
-                      Stop
-                    </Button>
-                  </>
-                )}
-
-                <Button
-                  variant="outline"
-                  onClick={() => {
-                    setSimulationResult(null);
-                    setProgress(0);
-                    setCurrentStep(0);
-                    setSimulationLog([]);
-                    toast.success("Simulation reset");
-                  }}
-                  disabled={isRunning}
-                  className="btn-secondary"
-                >
-                  <RefreshCw className="h-4 w-4 mr-2" />
-                  Reset
-                </Button>
-
-                {simulationResult && (
-                  <Button
-                    variant="outline"
-                    onClick={exportResults}
-                    className="btn-secondary"
-                  >
-                    <Download className="h-4 w-4 mr-2" />
-                    Export
-                  </Button>
-                )}
-              </div>
-
-              {/* Simulation Mode Controls */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-cyber-cyan/5 rounded-lg border border-cyber-cyan/20">
-                <div className="space-y-3">
-                  <Label className="text-sm font-medium text-cyber-cyan">
-                    Simulation Mode
-                  </Label>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="auto-mode"
-                        checked={autoMode}
-                        onCheckedChange={setAutoMode}
-                      />
-                      <Label
-                        htmlFor="auto-mode"
-                        className="text-sm text-cyber-cyan/80"
-                      >
-                        Auto Mode
-                      </Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="step-mode"
-                        checked={stepByStep}
-                        onCheckedChange={setStepByStep}
-                      />
-                      <Label
-                        htmlFor="step-mode"
-                        className="text-sm text-cyber-cyan/80"
-                      >
-                        Step-by-Step
-                      </Label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <Label className="text-sm font-medium text-cyber-cyan">
-                    Speed Control
-                  </Label>
-                  <div className="space-y-2">
-                    <div className="flex items-center space-x-2">
-                      <Label className="text-xs text-cyber-cyan/60">Slow</Label>
-                      <input
-                        type="range"
-                        min="0.5"
-                        max="3"
-                        step="0.5"
-                        value={simulationSpeed}
-                        onChange={(e) =>
-                          setSimulationSpeed(Number(e.target.value))
-                        }
-                        className="flex-1 cyber-slider"
-                      />
-                      <Label className="text-xs text-cyber-cyan/60">Fast</Label>
-                    </div>
-                    <div className="text-center text-xs text-cyber-cyan/60">
-                      Speed: {simulationSpeed}x
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Progress and Step Indicator */}
-              {isRunning && (
-                <div className="space-y-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center justify-between text-sm text-cyber-cyan">
-                      <span>Overall Progress</span>
-                      <span>{Math.round(progress)}%</span>
-                    </div>
-                    <Progress value={progress} className="h-3" />
-                  </div>
-
-                  {stepByStep && (
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm text-cyber-cyan">
-                        <span>Current Step</span>
-                        <span>
-                          {currentStep + 1} of {totalSteps}
-                        </span>
-                      </div>
-                      <div className="flex space-x-2">
-                        {Array.from({ length: totalSteps }, (_, i) => (
-                          <div
-                            key={i}
-                            className={`flex-1 h-2 rounded ${
-                              i <= currentStep
-                                ? "bg-cyber-cyan"
-                                : "bg-cyber-cyan/20"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                      <div className="flex justify-between text-xs text-cyber-cyan/60">
-                        <span>Init</span>
-                        <span>Analyze</span>
-                        <span>Execute</span>
-                        <span>Verify</span>
-                        <span>Report</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {isPaused && (
-                    <Alert className="border-yellow-500/30 bg-yellow-500/5">
-                      <Pause className="h-4 w-4 text-yellow-500" />
-                      <AlertDescription className="text-yellow-400">
-                        Simulation is paused. Click Resume to continue.
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                </div>
-              )}
-
-              {/* Live Simulation Log */}
-              {simulationLog.length > 0 && (
-                <div className="space-y-2">
-                  <Label className="text-sm font-medium text-cyber-cyan">
-                    Live Log
-                  </Label>
-                  <div className="bg-black/90 text-cyber-cyan p-3 rounded-lg font-mono text-xs max-h-32 overflow-y-auto border border-cyber-cyan/20">
-                    {simulationLog.map((log, index) => (
-                      <div key={index} className="flex">
-                        <span className="text-cyber-cyan/60 mr-2">
-                          [{new Date().toLocaleTimeString()}]
-                        </span>
-                        <span>{log}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
             </CardContent>
           </Card>
 

@@ -18,9 +18,9 @@ const Card = React.forwardRef<
       "before:absolute before:inset-0 before:bg-[repeating-linear-gradient(45deg,transparent,transparent_15px,rgba(0,255,255,0.02)_15px,rgba(0,255,255,0.02)_16px),repeating-linear-gradient(-45deg,transparent,transparent_30px,rgba(0,255,255,0.01)_30px,rgba(0,255,255,0.01)_31px)]",
       "before:pointer-events-none before:z-[1] before:animate-[cyber-grid-pulse_4s_ease-in-out_infinite]",
       // Hover effects
-      "hover:transform hover:translate-y-[-8px] hover:scale-[1.03]",
-      "hover:border-cyber-cyan/60",
-      "hover:shadow-[0_20px_80px_rgba(0,255,255,0.2),0_0_60px_rgba(0,255,255,0.1),inset_0_1px_0_rgba(255,255,255,0.1)]",
+      "hover:transform hover:translate-y-[-1px] hover:scale-[1.002]",
+      "hover:border-cyber-cyan/25",
+      "hover:shadow-[0_4px_15px_rgba(0,255,255,0.04),0_0_10px_rgba(0,255,255,0.02),inset_0_1px_0_rgba(255,255,255,0.02)]",
       // Border glow effect
       "after:absolute after:top-[-2px] after:left-[-2px] after:right-[-2px] after:bottom-[-2px]",
       "after:bg-[linear-gradient(45deg,rgba(0,255,255,0.1),transparent_30%,transparent_70%,rgba(0,255,255,0.1))]",

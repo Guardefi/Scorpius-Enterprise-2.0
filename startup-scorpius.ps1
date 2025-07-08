@@ -1,12 +1,12 @@
 # =============================================================================
-# Scorpius Platform Startup Script (PowerShell/Windows)
+# Scorpius Enterprise Platform Startup Script (PowerShell)
 # =============================================================================
-# This script starts up the entire Scorpius cybersecurity platform
-# including all backend services, frontend, and admin tools.
 
 param(
-    [switch]$SkipTests,
-    [switch]$Verbose
+    [switch]$Development,
+    [switch]$SkipPreChecks,
+    [switch]$Verbose,
+    [switch]$Help
 )
 
 # Set error action preference
@@ -19,6 +19,7 @@ function Write-Warning { param($Message) Write-Host "[WARNING] $Message" -Foregr
 function Write-Error { param($Message) Write-Host "[ERROR] $Message" -ForegroundColor Red }
 
 function Show-Banner {
+    Clear-Host
     Write-Host @"
  ____                      _             
 / ___|  ___ ___  _ __ _ __ (_)_   _ ___   
@@ -26,11 +27,43 @@ function Show-Banner {
  ___) | (_| (_) | |  | |_) | | |_| \__ \  
 |____/ \___\___/|_|  | .__/|_|\__,_|___/  
                      |_|                  
-  Enterprise Cybersecurity Platform
-"@ -ForegroundColor Blue
+  Enterprise Cybersecurity Platform v1.4
+"@ -ForegroundColor Cyan
     
-    Write-Host "🚀 Starting Scorpius Platform..." -ForegroundColor Blue
-    Write-Host ("=" * 50)
+    Write-Host "🚀 Initializing Scorpius Enterprise Platform..." -ForegroundColor Green
+    Write-Host ("=" * 60) -ForegroundColor Gray
+    Write-Host ""
+}
+
+function Show-Help {
+    Write-Host @"
+Scorpius Enterprise Platform Startup Script
+
+USAGE:
+    .\startup-scorpius.ps1 [OPTIONS]
+
+OPTIONS:
+    -Development      Run in development mode (enables debug logging)
+    -SkipPreChecks   Skip system requirements checks
+    -Verbose         Enable verbose output
+    -Help            Show this help message
+
+EXAMPLES:
+    .\startup-scorpius.ps1                    # Start in production mode
+    .\startup-scorpius.ps1 -Development      # Start in development mode
+    .\startup-scorpius.ps1 -Verbose          # Start with verbose logging
+
+SERVICES STARTED:
+    - PostgreSQL Database (Port 5432)
+    - Redis Cache (Port 6379)
+    - Keycloak Authentication (Port 8090)
+    - API Gateway (Port 8000)
+    - All Microservices (Ports 8010-8044)
+    - Frontend UI (Port 3000)
+    - Monitoring Stack (Prometheus: 9090, Grafana: 3001)
+    - Admin Tools (pgAdmin: 5050, Redis Commander: 8081)
+
+"@ -ForegroundColor Yellow
 }
 
 function Test-Command {
@@ -44,58 +77,264 @@ function Test-Command {
     }
 }
 
-function Test-Port {
-    param($Port)
-    try {
-        $connection = Test-NetConnection -ComputerName localhost -Port $Port -InformationLevel Quiet -WarningAction SilentlyContinue
-        return $connection
-    }
-    catch {
-        return $false
-    }
-}
-
-function Test-Prerequisites {
-    Write-Info "Checking prerequisites..."
+function Test-SystemRequirements {
+    Write-Info "Checking system requirements..."
     
-    $missingDeps = @()
-    
-    if (-not (Test-Command "docker")) { $missingDeps += "docker" }
-    if (-not (Test-Command "docker-compose")) { $missingDeps += "docker-compose" }
-    if (-not (Test-Command "node")) { $missingDeps += "node" }
-    if (-not (Test-Command "npm")) { $missingDeps += "npm" }
-    if (-not (Test-Command "python")) { $missingDeps += "python" }
-    if (-not (Test-Command "pip")) { $missingDeps += "pip" }
-    
-    if ($missingDeps.Count -gt 0) {
-        Write-Error "Missing required dependencies: $($missingDeps -join ', ')"
-        Write-Error "Please install the missing dependencies and try again."
+    # Check Docker
+    if (-not (Test-Command "docker")) {
+        Write-Error "Docker is not installed or not in PATH"
+        Write-Host "Please install Docker Desktop from: https://www.docker.com/products/docker-desktop" -ForegroundColor Yellow
         exit 1
     }
     
-    Write-Success "All prerequisites found"
-}
-
-function Stop-ExistingServices {
-    Write-Info "Cleaning up existing services..."
+    # Check Docker Compose
+    if (-not (Test-Command "docker-compose")) {
+        Write-Error "Docker Compose is not installed or not in PATH"
+        Write-Host "Please install Docker Compose or use Docker Desktop" -ForegroundColor Yellow
+        exit 1
+    }
     
+    # Check if Docker is running
     try {
-        # Stop Docker services
-        docker-compose -f docker/docker-compose.dev.yml down 2>$null
-        docker-compose -f docker/docker-compose.yml down 2>$null
+        $dockerInfo = docker info 2>&1
+        if ($LASTEXITCODE -ne 0) {
+            Write-Error "Docker is not running. Please start Docker Desktop."
+            exit 1
+        }
     }
     catch {
-        # Ignore errors for cleanup
+        Write-Error "Failed to connect to Docker daemon"
+        exit 1
     }
     
-    # Kill processes on our ports
-    $ports = @(8000, 8080, 3000, 5432, 6379, 5050, 8081)
-    foreach ($port in $ports) {
-        if (Test-Port $port) {
-            Write-Warning "Port $port is in use, attempting to free it..."
-            try {
-                Get-Process | Where-Object { $_.ProcessName -match "python|node|npm" } | Stop-Process -Force -ErrorAction SilentlyContinue
-            }
+    # Check available memory
+    $totalMemory = [math]::Round((Get-WmiObject -Class Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 2)
+    if ($totalMemory -lt 8) {
+        Write-Warning "System has only ${totalMemory}GB RAM. Recommended minimum is 8GB for enterprise deployment."
+    }
+    
+    # Check available disk space
+    $freeSpace = [math]::Round((Get-WmiObject -Class Win32_LogicalDisk -Filter "DeviceID='C:'").FreeSpace / 1GB, 2)
+    if ($freeSpace -lt 10) {
+        Write-Warning "System has only ${freeSpace}GB free disk space. Recommended minimum is 10GB."
+    }
+    
+    Write-Success "System requirements check completed"
+}
+
+function Initialize-Environment {
+    Write-Info "Initializing environment..."
+    
+    # Check if .env file exists
+    if (-not (Test-Path ".env")) {
+        Write-Warning ".env file not found. Creating from template..."
+        Copy-Item ".env.example" ".env" -ErrorAction SilentlyContinue
+    }
+    
+    # Create necessary directories
+    $directories = @(
+        "logs",
+        "logs/api-gateway",
+        "logs/mempool",
+        "logs/bridge",
+        "logs/bytecode",
+        "logs/mev-bot",
+        "logs/mev-protection",
+        "logs/wallet-guard",
+        "logs/honeypot",
+        "logs/quantum",
+        "logs/quantum-crypto",
+        "logs/ai-forensics",
+        "logs/simulation",
+        "logs/time-machine",
+        "logs/reporting",
+        "logs/exploit-testing",
+        "logs/integration-hub",
+        "logs/settings",
+        "logs/postgres"
+    )
+    
+    foreach ($dir in $directories) {
+        if (-not (Test-Path $dir)) {
+            New-Item -ItemType Directory -Path $dir -Force | Out-Null
+            Write-Info "Created directory: $dir"
+        }
+    }
+    
+    # Set environment variables for current session
+    if ($Development) {
+        $env:NODE_ENV = "development"
+        $env:LOG_LEVEL = "DEBUG"
+        Write-Info "Running in development mode"
+    } else {
+        $env:NODE_ENV = "production"
+        $env:LOG_LEVEL = "INFO"
+        Write-Info "Running in production mode"
+    }
+    
+    Write-Success "Environment initialized"
+}
+
+function Start-Infrastructure {
+    Write-Info "Starting core infrastructure services..."
+    
+    # Start infrastructure services first
+    docker-compose up -d postgres redis keycloak
+    
+    # Wait for services to be healthy
+    Write-Info "Waiting for infrastructure services to be ready..."
+    
+    $maxAttempts = 30
+    $attempt = 0
+    
+    do {
+        $attempt++
+        Start-Sleep -Seconds 10
+        
+        $postgresHealthy = docker-compose ps --services --filter "status=running" | Select-String "postgres"
+        $redisHealthy = docker-compose ps --services --filter "status=running" | Select-String "redis"
+        
+        if ($postgresHealthy -and $redisHealthy) {
+            Write-Success "Infrastructure services are ready"
+            break
+        }
+        
+        Write-Info "Waiting for infrastructure services... (${attempt}/${maxAttempts})"
+        
+    } while ($attempt -lt $maxAttempts)
+    
+    if ($attempt -ge $maxAttempts) {
+        Write-Error "Infrastructure services failed to start within timeout"
+        exit 1
+    }
+}
+
+function Start-CoreServices {
+    Write-Info "Starting core application services..."
+    
+    # Start API Gateway first
+    docker-compose up -d api-gateway
+    
+    # Wait for API Gateway to be ready
+    Write-Info "Waiting for API Gateway to be ready..."
+    Start-Sleep -Seconds 20
+    
+    # Start all other services
+    $services = @(
+        "mempool-service",
+        "bridge-service", 
+        "bytecode-service",
+        "mev-bot-service",
+        "mev-protection-service",
+        "wallet-guard-service",
+        "honeypot-service",
+        "quantum-service",
+        "quantum-crypto-service",
+        "ai-forensics-service",
+        "simulation-service",
+        "time-machine-service",
+        "reporting-service",
+        "exploit-testing-service",
+        "integration-hub",
+        "settings-service"
+    )
+    
+    foreach ($service in $services) {
+        Write-Info "Starting $service..."
+        docker-compose up -d $service
+        Start-Sleep -Seconds 5
+    }
+    
+    Write-Success "Core services started"
+}
+
+function Start-Frontend {
+    Write-Info "Starting frontend application..."
+    docker-compose up -d frontend
+    Write-Success "Frontend started"
+}
+
+function Start-Monitoring {
+    Write-Info "Starting monitoring stack..."
+    docker-compose up -d prometheus grafana
+    Write-Success "Monitoring stack started"
+}
+
+function Start-AdminTools {
+    Write-Info "Starting admin tools..."
+    docker-compose up -d pgadmin redis-commander
+    Write-Success "Admin tools started"
+}
+
+function Show-ServiceStatus {
+    Write-Info "Checking service status..."
+    
+    $services = docker-compose ps --format table
+    Write-Host $services
+    
+    Write-Host ""
+    Write-Info "Service endpoints:"
+    Write-Host "🌐 Frontend UI:          http://localhost:3000" -ForegroundColor Green
+    Write-Host "🔧 API Gateway:          http://localhost:8000" -ForegroundColor Green
+    Write-Host "🔐 Keycloak Admin:       http://localhost:8090" -ForegroundColor Green
+    Write-Host "📊 Grafana Dashboard:    http://localhost:3001" -ForegroundColor Green
+    Write-Host "📈 Prometheus:           http://localhost:9090" -ForegroundColor Green
+    Write-Host "🗄️  pgAdmin:              http://localhost:5050" -ForegroundColor Green
+    Write-Host "🔴 Redis Commander:      http://localhost:8081" -ForegroundColor Green
+    Write-Host ""
+    Write-Host "📋 Default credentials:" -ForegroundColor Yellow
+    Write-Host "   Keycloak: admin/admin123"
+    Write-Host "   Grafana:  admin/admin"
+    Write-Host "   pgAdmin:  admin@scorpius.local/admin123"
+}
+
+function Show-CompletionMessage {
+    Write-Host ""
+    Write-Host ("=" * 60) -ForegroundColor Gray
+    Write-Success "🎉 Scorpius Enterprise Platform is now running!"
+    Write-Host ""
+    Write-Host "Next steps:" -ForegroundColor Yellow
+    Write-Host "1. Open the frontend at http://localhost:3000"
+    Write-Host "2. Configure authentication in Keycloak"
+    Write-Host "3. Set up monitoring dashboards in Grafana"
+    Write-Host "4. Check service logs with: docker-compose logs -f [service-name]"
+    Write-Host ""
+    Write-Host "To stop all services: .\stop-scorpius.ps1" -ForegroundColor Cyan
+    Write-Host ("=" * 60) -ForegroundColor Gray
+}
+
+# =============================================================================
+# MAIN EXECUTION
+# =============================================================================
+
+try {
+    if ($Help) {
+        Show-Help
+        exit 0
+    }
+    
+    Show-Banner
+    
+    if (-not $SkipPreChecks) {
+        Test-SystemRequirements
+    }
+    
+    Initialize-Environment
+    Start-Infrastructure
+    Start-CoreServices
+    Start-Frontend
+    Start-Monitoring
+    Start-AdminTools
+    
+    Start-Sleep -Seconds 10
+    Show-ServiceStatus
+    Show-CompletionMessage
+    
+} catch {
+    Write-Error "Startup failed: $($_.Exception.Message)"
+    Write-Host "Check the logs with: docker-compose logs" -ForegroundColor Yellow
+    exit 1
+}
             catch {
                 # Ignore errors
             }

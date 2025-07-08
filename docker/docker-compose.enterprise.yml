@@ -7,7 +7,7 @@ services:
     container_name: scorpius-redis-enterprise
     command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD:-scorpius123}
     ports:
-      - "6379:6379"
+      - "6390:6379"
     volumes:
       - redis_data:/data
       - ./config/redis.conf:/usr/local/etc/redis/redis.conf:ro
@@ -29,7 +29,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD:-scorpius123}
       POSTGRES_INITDB_ARGS: "--encoding=UTF-8"
     ports:
-      - "5432:5432"
+      - "5440:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./infrastructure/sql:/docker-entrypoint-initdb.d:ro
@@ -50,15 +50,15 @@ services:
       dockerfile: services/api-gateway/Dockerfile
     container_name: scorpius-gateway-enterprise
     ports:
-      - "8000:8000"
-      - "8001:8001"  # Debug port
+      - "8010:8000"
+      - "8011:8001"  # Debug port
     environment:
       - ENVIRONMENT=enterprise
       - REDIS_URL=redis://:${REDIS_PASSWORD:-scorpius123}@redis:6379
       - DATABASE_URL=postgresql://scorpius:${DB_PASSWORD:-scorpius123}@postgres:5432/scorpius_enterprise
       - JWT_SECRET=${JWT_SECRET:-enterprise-secret-key}
       - LOG_LEVEL=INFO
-      - CORS_ORIGINS=http://localhost:3000,http://localhost:3010,http://localhost:8080,http://127.0.0.1:3000,http://127.0.0.1:3010,http://127.0.0.1:8080
+      - CORS_ORIGINS=http://localhost:3000,http://localhost:8080
       - SCANNER_SLITHER_URL=http://scanner-slither:8000
       - SCANNER_MYTHRIL_URL=http://scanner-mythril:8000
       - SCANNER_MYTHX_URL=http://scanner-mythx:8000
@@ -318,11 +318,11 @@ services:
       dockerfile: Dockerfile
     container_name: scorpius-frontend-enterprise
     ports:
-      - "3000:3000"
+      - "3010:3000"
     environment:
       - NODE_ENV=production
-      - VITE_API_BASE_URL=http://localhost:8000
-      - VITE_WS_BASE_URL=ws://localhost:8000
+      - VITE_API_BASE_URL=http://localhost:8010
+      - VITE_WS_BASE_URL=ws://localhost:8010
     volumes:
       - ./frontend:/app:rw
       - /app/node_modules
@@ -338,7 +338,7 @@ services:
     image: prom/prometheus:latest
     container_name: scorpius-prometheus-enterprise
     ports:
-      - "9090:9090"
+      - "9091:9090"
     volumes:
       - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - prometheus_data:/prometheus
@@ -394,7 +394,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD:-admin}
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - "5050:80"
+      - "5051:80"
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     networks:
@@ -408,7 +408,7 @@ services:
     environment:
       - REDIS_HOSTS=local:redis:6379:0:${REDIS_PASSWORD:-scorpius123}
     ports:
-      - "8081:8081"
+      - "8082:8081"
     networks:
       - scorpius-enterprise
     restart: unless-stopped

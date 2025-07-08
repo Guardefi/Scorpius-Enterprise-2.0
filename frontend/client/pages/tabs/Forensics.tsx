@@ -139,6 +139,9 @@ export default function Forensics() {
         </Card>
       </div>
 
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
+
       {/* Risk Assessment Matrix */}
       <Card>
         <CardHeader>

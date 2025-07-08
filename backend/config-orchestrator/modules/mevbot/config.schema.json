@@ -1,0 +1,71 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "MEV Bot Configuration",
+  "type": "object",
+  "properties": {
+    "rpcUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Ethereum RPC endpoint URL"
+    },
+    "flashloanProvider": {
+      "type": "string",
+      "enum": ["AAVE", "COMPOUND", "UNISWAP", "BALANCER"],
+      "description": "Flashloan provider for arbitrage"
+    },
+    "privateKey": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 66,
+      "pattern": "^(0x)?[a-fA-F0-9]{64}$",
+      "description": "Private key for transaction execution"
+    },
+    "maxGasPrice": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 1000,
+      "description": "Maximum gas price in gwei"
+    },
+    "minProfitThreshold": {
+      "type": "number",
+      "minimum": 0.001,
+      "description": "Minimum profit threshold in ETH"
+    },
+    "slippageTolerance": {
+      "type": "number",
+      "minimum": 0.1,
+      "maximum": 5.0,
+      "description": "Slippage tolerance percentage"
+    },
+    "enableSandwich": {
+      "type": "boolean",
+      "description": "Enable sandwich attack detection and execution"
+    },
+    "enableArbitrage": {
+      "type": "boolean", 
+      "description": "Enable arbitrage opportunities"
+    },
+    "enableLiquidation": {
+      "type": "boolean",
+      "description": "Enable liquidation opportunities"
+    },
+    "whitelistTokens": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^0x[a-fA-F0-9]{40}$"
+      },
+      "description": "Whitelist of token addresses to trade"
+    },
+    "blacklistTokens": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^0x[a-fA-F0-9]{40}$"
+      },
+      "description": "Blacklist of token addresses to avoid"
+    }
+  },
+  "required": ["rpcUrl", "flashloanProvider", "privateKey", "maxGasPrice", "minProfitThreshold"],
+  "additionalProperties": false
+}

@@ -13,6 +13,8 @@ import {
   Lock,
   User,
   Home,
+  BarChart3,
+  Monitor,
 } from "lucide-react";
 
 import { Dock, DockIcon, DockItem, DockLabel } from "@/components/ui/dock";
@@ -23,11 +25,14 @@ interface ScorpiusDockProps {
 }
 
 const dockData = [
+  // Main Overview
   {
     title: "Main",
     icon: <Home className="h-full w-full text-cyber-cyan" />,
     value: "overview",
   },
+
+  // 1. Monitoring
   {
     title: "Scanner",
     icon: <Search className="h-full w-full text-cyber-cyan" />,
@@ -39,6 +44,30 @@ const dockData = [
     value: "mempool",
   },
   {
+    title: "Quantum",
+    icon: <Lock className="h-full w-full text-cyber-cyan" />,
+    value: "quantum",
+  },
+  {
+    title: "Honeypot",
+    icon: <Target className="h-full w-full text-cyber-cyan" />,
+    value: "honeypot",
+  },
+
+  // 2. Retrospective / Analysis
+  {
+    title: "Time Machine",
+    icon: <Clock className="h-full w-full text-cyber-cyan" />,
+    value: "time-machine",
+  },
+  {
+    title: "Forensics",
+    icon: <Eye className="h-full w-full text-cyber-cyan" />,
+    value: "forensics",
+  },
+
+  // 3. Operations
+  {
     title: "MEV OPS",
     icon: <Zap className="h-full w-full text-cyber-cyan" />,
     value: "mev-ops",
@@ -49,40 +78,41 @@ const dockData = [
     value: "bridge",
   },
   {
-    title: "Forensics",
-    icon: <Eye className="h-full w-full text-cyber-cyan" />,
-    value: "forensics",
-  },
-  {
-    title: "Time Machine",
-    icon: <Clock className="h-full w-full text-cyber-cyan" />,
-    value: "time-machine",
-  },
-  {
-    title: "Honeypot",
-    icon: <Target className="h-full w-full text-cyber-cyan" />,
-    value: "honeypot",
-  },
-  {
-    title: "Quantum",
-    icon: <Lock className="h-full w-full text-cyber-cyan" />,
-    value: "quantum",
-  },
-  {
     title: "Simulate",
     icon: <Cpu className="h-full w-full text-cyber-cyan" />,
     value: "simulation",
+  },
+  {
+    title: "Computing",
+    icon: <Server className="h-full w-full text-cyber-cyan" />,
+    value: "computing",
+  },
+
+  // 4. Insights & Reporting
+  {
+    title: "Analytics",
+    icon: <BarChart3 className="h-full w-full text-cyber-cyan" />,
+    value: "analytics",
+  },
+  {
+    title: "Grafana",
+    icon: <Monitor className="h-full w-full text-cyber-cyan" />,
+    value: "grafana",
   },
   {
     title: "Reports",
     icon: <FileText className="h-full w-full text-cyber-cyan" />,
     value: "reports",
   },
+
+  // 5. Security
   {
     title: "Wallet Guard",
     icon: <Shield className="h-full w-full text-cyber-cyan" />,
     value: "wallet-guard",
   },
+
+  // 6. Admin
   {
     title: "System",
     icon: <User className="h-full w-full text-cyber-cyan" />,

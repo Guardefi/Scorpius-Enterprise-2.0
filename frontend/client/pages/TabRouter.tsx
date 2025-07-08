@@ -15,6 +15,9 @@ import TimeMachine from "./tabs/TimeMachine";
 import Honeypot from "./tabs/Honeypot";
 import Quantum from "./tabs/Quantum";
 import Simulation from "./tabs/Simulation";
+import Computing from "./tabs/Computing";
+import Analytics from "./tabs/Analytics";
+import GrafanaMonitoring from "./tabs/GrafanaMonitoring";
 import Reports from "./tabs/Reports";
 import WalletGuard from "./tabs/WalletGuard";
 import Profile from "./tabs/Profile";
@@ -61,7 +64,7 @@ export default function TabRouter() {
             </h1>
             <div className="flex items-center justify-center gap-2 mb-2">
               <p className="text-sm text-cyber-cyan/80 font-medium uppercase tracking-[0.3em]">
-                Quantum Security Platform
+                Security Platform
               </p>
             </div>
           </div>
@@ -74,6 +77,49 @@ export default function TabRouter() {
               className="opacity-30"
             />
           </div>
+
+          {/* Zero-Day Alert System - Bottom Right of Header */}
+          <div className="absolute bottom-4 right-4 z-10">
+            <div className="flex items-center space-x-2 bg-black/80 backdrop-blur-xl border border-red-500/30 rounded-lg p-3 shadow-lg">
+              <div className="relative">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  className="text-red-500"
+                  fill="currentColor"
+                >
+                  <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+                </svg>
+                <div className="absolute inset-0 animate-ping">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    className="text-red-500/50"
+                    fill="currentColor"
+                  >
+                    <path d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z" />
+                  </svg>
+                </div>
+              </div>
+              <div className="text-red-400 font-mono text-sm">
+                <span className="font-bold">0-DAY ALERT</span>
+                <div className="text-xs text-red-400/70">(COMING SOON)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Tron-like Separator */}
+        <div className="relative mb-8">
+          <div className="h-px bg-gradient-to-r from-transparent via-cyber-cyan to-transparent opacity-60"></div>
+          <div className="absolute inset-0 h-px bg-gradient-to-r from-transparent via-cyber-cyan to-transparent blur-sm opacity-80"></div>
+          <div className="absolute inset-0 h-0.5 bg-gradient-to-r from-transparent via-cyber-cyan/50 to-transparent blur-md"></div>
+          {/* Animated scanning effect */}
+          <div className="absolute inset-0 h-px overflow-hidden">
+            <div className="absolute top-0 w-20 h-px bg-gradient-to-r from-transparent via-white to-transparent animate-cyber-scan opacity-70"></div>
+          </div>
         </div>
 
         {/* Main Tabs with Dock Navigation */}
@@ -84,7 +130,10 @@ export default function TabRouter() {
         >
           {/* Tab Content */}
           <TabsContent value="overview">
-            <Overview />
+            <Overview
+              onNavigateToProfile={() => setActiveTab("profile")}
+              onNavigateToTab={setActiveTab}
+            />
           </TabsContent>
 
           <TabsContent value="scanner">
@@ -121,6 +170,18 @@ export default function TabRouter() {
 
           <TabsContent value="simulation">
             <Simulation />
+          </TabsContent>
+
+          <TabsContent value="computing">
+            <Computing />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <Analytics />
+          </TabsContent>
+
+          <TabsContent value="grafana">
+            <GrafanaMonitoring />
           </TabsContent>
 
           <TabsContent value="reports">

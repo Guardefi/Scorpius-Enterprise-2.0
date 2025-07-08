@@ -15,7 +15,6 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { LiveCounter } from "@/components/ui/live-counter";
-import { PageHeader } from "@/components/PageHeader";
 import { PageLayout } from "@/components/PageLayout";
 import {
   FileText,
@@ -494,13 +493,6 @@ export default function Reports() {
 
   return (
     <PageLayout>
-      <PageHeader
-        title="Enterprise Reporting"
-        description="Professional security audit reports and analytics"
-        icon={FileText}
-        iconGradient="from-indigo-500 to-purple-600"
-      />
-
       {/* Stats Dashboard */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -589,6 +581,9 @@ export default function Reports() {
           </motion.div>
         ))}
       </motion.div>
+
+      {/* Tron Separator */}
+      <div className="cyber-divider"></div>
 
       {/* Main Content Tabs */}
       <Tabs defaultValue="generate" className="space-y-6">

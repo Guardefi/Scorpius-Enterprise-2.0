@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Mempool Monitor Configuration",
+  "type": "object",
+  "properties": {
+    "rpcUrl": {
+      "type": "string",
+      "format": "uri",
+      "description": "Ethereum RPC endpoint URL"
+    },
+    "infuraKey": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Infura API key for blockchain access"
+    },
+    "alchemyKey": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Alchemy API key for enhanced blockchain data"
+    },
+    "privateKey": {
+      "type": "string",
+      "minLength": 64,
+      "maxLength": 66,
+      "pattern": "^(0x)?[a-fA-F0-9]{64}$",
+      "description": "Private key for transaction signing (will be encrypted)"
+    },
+    "mempoolRefreshRate": {
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 60000,
+      "description": "Mempool refresh rate in milliseconds"
+    },
+    "gasThreshold": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Gas price threshold for monitoring (in gwei)"
+    },
+    "enableLogging": {
+      "type": "boolean",
+      "description": "Enable detailed logging"
+    },
+    "logLevel": {
+      "type": "string",
+      "enum": ["DEBUG", "INFO", "WARNING", "ERROR"],
+      "description": "Logging level"
+    }
+  },
+  "required": ["rpcUrl", "infuraKey", "privateKey", "mempoolRefreshRate", "gasThreshold"],
+  "additionalProperties": false
+}

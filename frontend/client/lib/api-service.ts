@@ -1,459 +1,220 @@
-import {
-  ApiResponse,
-  ScanRequest,
-  ScanResponse,
-  HoneypotAnalysisRequest,
-  HoneypotAnalysisResponse,
-  HistoricalQueryRequest,
-  HistoricalQueryResponse,
-  ForensicsAnalysisRequest,
-  ForensicsAnalysisResponse,
-  QuantumResistanceRequest,
-  QuantumResistanceResponse,
-  MempoolAnalysisResponse,
-  ExploitReplayRequest,
-  ExploitReplayResponse,
-} from "@shared/api-types";
-import {
-  getBackendConfig,
-  getApiEndpoints,
-  createRequestInterceptor,
-  checkBackendHealth,
-  type BackendConfig,
-  type BackendMode,
-} from "@shared/backend-config";
-
 /**
- * Enhanced API Service with Python Backend Integration
- * Supports multiple backend modes: Express, Python, Mock
+ * Unified API Service
+ * Central service that integrates all backend APIs
  */
-class ApiService {
-  private config: BackendConfig;
-  private endpoints: ReturnType<typeof getApiEndpoints>;
-  private requestInterceptor: ReturnType<typeof createRequestInterceptor>;
-  private healthCheckInterval: NodeJS.Timeout | null = null;
-  private isHealthy = false;
+
+import { scorpiusAPI } from '../../shared/scorpius-api';
+import { dashboardAPI } from '../../shared/dashboard-api';
+
+export class APIService {
+  // Core API instance
+  public core = scorpiusAPI;
+  
+  // Dashboard-specific API
+  public dashboard = dashboardAPI;
 
   constructor() {
-    this.config = getBackendConfig();
-    this.endpoints = getApiEndpoints();
-    this.requestInterceptor = createRequestInterceptor(this.config);
-
-    // Start health monitoring
-    this.startHealthMonitoring();
+    // Initialize with environment-specific base URL
+    const baseUrl = process.env.VITE_API_BASE_URL || 'http://localhost:8000';
+    this.core = new (scorpiusAPI.constructor as any)(baseUrl);
+    this.dashboard = new (dashboardAPI.constructor as any)();
   }
 
-  /**
-   * Health monitoring for backend connectivity
-   */
-  private startHealthMonitoring() {
-    // Initial health check
-    this.checkHealth();
-
-    // Periodic health checks every 30 seconds
-    this.healthCheckInterval = setInterval(() => {
-      this.checkHealth();
-    }, 30000);
+  // Authentication methods
+  async login(email: string, password: string) {
+    const response = await this.core.login(email, password);
+    if (response.access_token) {
+      localStorage.setItem('scorpius_token', response.access_token);
+    }
+    return response;
   }
 
-  private async checkHealth() {
+  async logout() {
+    const response = await this.core.logout();
+    localStorage.removeItem('scorpius_token');
+    return response;
+  }
+
+  // Initialize authentication from stored token
+  initializeAuth() {
+    const token = localStorage.getItem('scorpius_token');
+    if (token) {
+      this.core.setAuthToken(token);
+    }
+  }
+
+  // Health check for all services
+  async healthCheck() {
     try {
-      this.isHealthy = await checkBackendHealth();
-
-      // Emit health status event
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(
-          new CustomEvent("api-health-change", {
-            detail: {
-              healthy: this.isHealthy,
-              mode: this.config.mode,
-              timestamp: new Date().toISOString(),
-            },
-          }),
-        );
-      }
+      const response = await this.core.request('/health');
+      return response;
     } catch (error) {
-      this.isHealthy = false;
-      console.warn("Health check failed:", error);
+      console.error('Health check failed:', error);
+      throw error;
     }
   }
 
-  /**
-   * Get current backend information
-   */
-  getBackendInfo() {
-    return {
-      mode: this.config.mode,
-      baseUrl: this.config.baseUrl,
-      healthy: this.isHealthy,
-      config: this.config,
-    };
+  // Batch operations
+  async batchScanContracts(addresses: string[]) {
+    const contracts = addresses.map(address => ({ address }));
+    return this.core.batchScan(contracts);
   }
 
-  /**
-   * Generic request method with retry logic and error handling
-   */
-  private async request<T>(
-    endpoint: string,
-    options: RequestInit = {},
-  ): Promise<ApiResponse<T>> {
-    const url = `${this.config.baseUrl}${endpoint}`;
-
-    // For mock mode, return mock data
-    if (this.config.mode === "mock") {
-      return this.mockRequest<T>(endpoint, options);
-    }
-
-    let lastError: Error | null = null;
-
-    // Retry logic
-    for (let attempt = 0; attempt <= this.config.retryAttempts; attempt++) {
-      try {
-        const requestOptions = this.requestInterceptor(endpoint, options);
-
-        const response = await fetch(url, requestOptions);
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(
-            data.error?.message ||
-              `HTTP ${response.status}: ${response.statusText}`,
-          );
-        }
-
-        // Update health status on successful request
-        if (!this.isHealthy) {
-          this.isHealthy = true;
-          this.checkHealth();
-        }
-
-        return data;
-      } catch (error) {
-        lastError = error as Error;
-        console.warn(
-          `API request failed (attempt ${attempt + 1}/${this.config.retryAttempts + 1}):`,
-          error,
-        );
-
-        // Don't retry on certain errors
-        if (error instanceof TypeError && error.message.includes("fetch")) {
-          break; // Network error, don't retry
-        }
-
-        // Wait before retry
-        if (attempt < this.config.retryAttempts) {
-          await new Promise((resolve) =>
-            setTimeout(resolve, this.config.retryDelay),
-          );
-        }
-      }
-    }
-
-    // All retries failed
-    this.isHealthy = false;
-    throw lastError || new Error("All retry attempts failed");
+  async batchAnalyzeWallets(addresses: string[]) {
+    const promises = addresses.map(address => this.core.analyzeWallet(address));
+    return Promise.all(promises);
   }
 
-  /**
-   * Mock request handler for testing
-   */
-  private async mockRequest<T>(
-    endpoint: string,
-    options: RequestInit,
-  ): Promise<ApiResponse<T>> {
-    // Simulate network delay
-    await new Promise((resolve) =>
-      setTimeout(resolve, 300 + Math.random() * 200),
-    );
-
-    // Simulate random errors (if enabled)
-    if (
-      this.config.mode === "mock" &&
-      (this.config as any).enableRandomErrors &&
-      Math.random() < 0.1
-    ) {
-      throw new Error("Mock network error");
-    }
-
-    // Return mock success response
-    return {
-      success: true,
-      data: {} as T, // Mock implementations would provide real mock data
-      timestamp: new Date().toISOString(),
-    };
-  }
-
-  // ==================== SCANNER API ====================
-
-  async scanContract(request: ScanRequest): Promise<ApiResponse<ScanResponse>> {
-    return this.request<ScanResponse>(this.endpoints.SCAN_CONTRACT, {
-      method: "POST",
-      body: JSON.stringify(request),
+  // Real-time data subscriptions
+  subscribeToUpdates(callback: (data: any) => void) {
+    return this.core.connectWebSocket((event) => {
+      const data = JSON.parse(event.data);
+      callback(data);
     });
   }
 
-  async getScanResults(scanId: string): Promise<ApiResponse<ScanResponse>> {
-    return this.request<ScanResponse>(
-      `${this.endpoints.GET_SCAN_RESULTS}/${scanId}`,
+  // Export functionality
+  async exportData(type: string, format: string, filters?: any) {
+    switch (type) {
+      case 'scan_results':
+        return this.core.generateCsvReport({ type: 'scan_results', filters });
+      case 'vulnerabilities':
+        return this.core.generateExcelReport({ type: 'vulnerabilities', filters });
+      case 'forensics':
+        return this.core.generatePdfReport({ type: 'forensics', filters });
+      default:
+        throw new Error(`Unknown export type: ${type}`);
+    }
+  }
+
+  // Notification helpers
+  async sendAlert(type: 'telegram' | 'slack', config: any, message: string) {
+    if (type === 'telegram') {
+      return this.dashboard.sendTelegramNotification(config.chatId, message);
+    } else if (type === 'slack') {
+      return this.dashboard.sendSlackNotification(config.channel, message);
+    }
+    throw new Error(`Unknown notification type: ${type}`);
+  }
+
+  // Analytics aggregation
+  async getComprehensiveAnalytics(timeframe: string = '24h') {
+    const [
+      scanStats,
+      quantumMetrics,
+      bridgeActivity,
+      systemHealth
+    ] = await Promise.all([
+      this.dashboard.getAnalyticsOverview(),
+      this.core.getQuantumMetrics(),
+      this.dashboard.getBridgeMonitor(''),
+      this.dashboard.getComputingStatus()
+    ]);
+
+    return {
+      scans: scanStats,
+      quantum: quantumMetrics,
+      bridge: bridgeActivity,
+      system: systemHealth,
+      timestamp: new Date().toISOString()
+    };
+  }
+
+  // Search functionality
+  async searchContracts(query: string, filters?: any) {
+    // This would integrate with a search service
+    return this.core.request(`/api/search/contracts?q=${encodeURIComponent(query)}`, {
+      method: 'POST',
+      body: JSON.stringify(filters || {})
+    });
+  }
+
+  // Bulk operations
+  async bulkOperation(operation: string, targets: string[], options?: any) {
+    const batchSize = 10; // Process in batches to avoid overwhelming the backend
+    const results = [];
+
+    for (let i = 0; i < targets.length; i += batchSize) {
+      const batch = targets.slice(i, i + batchSize);
+      const batchPromises = batch.map(target => {
+        switch (operation) {
+          case 'scan':
+            return this.core.scanContract({ address: target, ...options });
+          case 'analyze_wallet':
+            return this.core.analyzeWallet(target);
+          case 'check_honeypot':
+            return this.core.checkHoneypot({ address: target });
+          default:
+            throw new Error(`Unknown bulk operation: ${operation}`);
+        }
+      });
+
+      const batchResults = await Promise.allSettled(batchPromises);
+      results.push(...batchResults);
+    }
+
+    return results;
+  }
+
+  // Configuration management
+  async updateConfiguration(service: string, config: any) {
+    return this.core.request(`/api/config/${service}`, {
+      method: 'PUT',
+      body: JSON.stringify(config)
+    });
+  }
+
+  async getConfiguration(service: string) {
+    return this.core.request(`/api/config/${service}`);
+  }
+
+  // Service status monitoring
+  async getServiceStatus() {
+    return this.core.request('/api/status/services');
+  }
+
+  // Data synchronization
+  async syncData(services: string[] = []) {
+    const syncPromises = services.map(service => 
+      this.core.request(`/api/sync/${service}`, { method: 'POST' })
     );
+    return Promise.all(syncPromises);
   }
 
-  async getScanHistory(): Promise<ApiResponse<ScanResponse[]>> {
-    return this.request<ScanResponse[]>(this.endpoints.GET_SCAN_HISTORY);
+  // Cache management
+  async clearCache(type?: string) {
+    const endpoint = type ? `/api/cache/clear/${type}` : '/api/cache/clear';
+    return this.core.request(endpoint, { method: 'DELETE' });
   }
 
-  async cancelScan(scanId: string): Promise<ApiResponse<void>> {
-    // Only available in Python backend
-    if (this.config.mode === "python") {
-      return this.request<void>(
-        `${(this.endpoints as any).CANCEL_SCAN}/${scanId}`,
-        {
-          method: "POST",
+  // Performance monitoring
+  async getPerformanceMetrics() {
+    return this.core.request('/api/metrics/performance');
+  }
+
+  // Error reporting
+  async reportError(error: any, context?: any) {
+    return this.core.request('/api/errors/report', {
+      method: 'POST',
+      body: JSON.stringify({
+        error: {
+          message: error.message,
+          stack: error.stack,
+          name: error.name
         },
-      );
-    }
-    throw new Error("Cancel scan not supported in current backend mode");
-  }
-
-  // ==================== HONEYPOT API ====================
-
-  async analyzeHoneypot(
-    request: HoneypotAnalysisRequest,
-  ): Promise<ApiResponse<HoneypotAnalysisResponse>> {
-    return this.request<HoneypotAnalysisResponse>(
-      this.endpoints.ANALYZE_HONEYPOT,
-      {
-        method: "POST",
-        body: JSON.stringify(request),
-      },
-    );
-  }
-
-  async getHoneypotResults(): Promise<ApiResponse<HoneypotAnalysisResponse[]>> {
-    return this.request<HoneypotAnalysisResponse[]>(
-      this.endpoints.GET_HONEYPOT_RESULTS,
-    );
-  }
-
-  async getHoneypotAnalysis(
-    analysisId: string,
-  ): Promise<ApiResponse<HoneypotAnalysisResponse>> {
-    // Only available in Python backend
-    if (this.config.mode === "python") {
-      return this.request<HoneypotAnalysisResponse>(
-        `${(this.endpoints as any).GET_HONEYPOT_ANALYSIS}/${analysisId}`,
-      );
-    }
-
-    // Fallback for Express backend
-    const results = await this.getHoneypotResults();
-    const analysis = results.data?.find((a) => a.id === analysisId);
-
-    if (!analysis) {
-      throw new Error("Analysis not found");
-    }
-
-    return {
-      success: true,
-      data: analysis,
-      timestamp: new Date().toISOString(),
-    };
-  }
-
-  // ==================== TIME MACHINE API ====================
-
-  async executeHistoricalQuery(
-    request: HistoricalQueryRequest,
-  ): Promise<ApiResponse<HistoricalQueryResponse>> {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).HISTORICAL_QUERY
-        : "/api/time-machine/query"; // Express fallback
-
-    return this.request<HistoricalQueryResponse>(endpoint, {
-      method: "POST",
-      body: JSON.stringify(request),
+        context,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        url: window.location.href
+      })
     });
-  }
-
-  async getHistoricalData(): Promise<ApiResponse<HistoricalQueryResponse[]>> {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).GET_HISTORICAL_DATA
-        : "/api/time-machine/history"; // Express fallback
-
-    return this.request<HistoricalQueryResponse[]>(endpoint);
-  }
-
-  // ==================== EXPLOIT REPLAY API ====================
-
-  async getExploits(): Promise<ApiResponse<any[]>> {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).GET_EXPLOITS
-        : "/api/exploits/list"; // Express fallback
-
-    return this.request<any[]>(endpoint);
-  }
-
-  async startExploitReplay(
-    request: ExploitReplayRequest,
-  ): Promise<ApiResponse<ExploitReplayResponse>> {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).START_REPLAY
-        : "/api/exploits/replay/start"; // Express fallback
-
-    return this.request<ExploitReplayResponse>(endpoint, {
-      method: "POST",
-      body: JSON.stringify(request),
-    });
-  }
-
-  async controlExploitReplay(
-    action: string,
-    data?: any,
-  ): Promise<ApiResponse<ExploitReplayResponse>> {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).CONTROL_REPLAY
-        : "/api/exploits/replay/control"; // Express fallback
-
-    return this.request<ExploitReplayResponse>(endpoint, {
-      method: "POST",
-      body: JSON.stringify({ action, data }),
-    });
-  }
-
-  // ==================== FORENSICS API ====================
-
-  async analyzeForensics(
-    request: ForensicsAnalysisRequest,
-  ): Promise<ApiResponse<ForensicsAnalysisResponse>> {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).ANALYZE_FORENSICS
-        : "/api/forensics/analyze"; // Express fallback
-
-    return this.request<ForensicsAnalysisResponse>(endpoint, {
-      method: "POST",
-      body: JSON.stringify(request),
-    });
-  }
-
-  async getForensicsResults(): Promise<
-    ApiResponse<ForensicsAnalysisResponse[]>
-  > {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).GET_FORENSICS_RESULTS
-        : "/api/forensics/results"; // Express fallback
-
-    return this.request<ForensicsAnalysisResponse[]>(endpoint);
-  }
-
-  // ==================== MEMPOOL API ====================
-
-  async getMempoolData(): Promise<ApiResponse<MempoolAnalysisResponse>> {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).GET_MEMPOOL_DATA
-        : "/api/mempool/current"; // Express fallback
-
-    return this.request<MempoolAnalysisResponse>(endpoint);
-  }
-
-  async analyzeMempoolTransactions(): Promise<
-    ApiResponse<MempoolAnalysisResponse>
-  > {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).MEMPOOL_ANALYSIS
-        : "/api/mempool/analyze"; // Express fallback
-
-    return this.request<MempoolAnalysisResponse>(endpoint, {
-      method: "POST",
-    });
-  }
-
-  // ==================== QUANTUM API ====================
-
-  async analyzeQuantumResistance(
-    request: QuantumResistanceRequest,
-  ): Promise<ApiResponse<QuantumResistanceResponse>> {
-    const endpoint =
-      this.config.mode === "python"
-        ? (this.endpoints as any).QUANTUM_ANALYSIS
-        : "/api/quantum/analyze"; // Express fallback
-
-    return this.request<QuantumResistanceResponse>(endpoint, {
-      method: "POST",
-      body: JSON.stringify(request),
-    });
-  }
-
-  // ==================== MEV & BRIDGE APIs ====================
-  // These are only available in Python backend
-
-  async analyzeBridge(request: any): Promise<ApiResponse<any>> {
-    if (this.config.mode !== "python") {
-      throw new Error("Bridge analysis only available in Python backend");
-    }
-
-    return this.request<any>((this.endpoints as any).BRIDGE_ANALYSIS, {
-      method: "POST",
-      body: JSON.stringify(request),
-    });
-  }
-
-  async getBridgeOpportunities(): Promise<ApiResponse<any[]>> {
-    if (this.config.mode !== "python") {
-      throw new Error("Bridge opportunities only available in Python backend");
-    }
-
-    return this.request<any[]>((this.endpoints as any).BRIDGE_OPPORTUNITIES);
-  }
-
-  async getMEVOpportunities(): Promise<ApiResponse<any[]>> {
-    if (this.config.mode !== "python") {
-      throw new Error("MEV opportunities only available in Python backend");
-    }
-
-    return this.request<any[]>((this.endpoints as any).MEV_OPPORTUNITIES);
-  }
-
-  async analyzeMEV(request: any): Promise<ApiResponse<any>> {
-    if (this.config.mode !== "python") {
-      throw new Error("MEV analysis only available in Python backend");
-    }
-
-    return this.request<any>((this.endpoints as any).MEV_ANALYSIS, {
-      method: "POST",
-      body: JSON.stringify(request),
-    });
-  }
-
-  // ==================== WEBSOCKET ====================
-
-  createWebSocketConnection(): WebSocket {
-    const wsUrl = `${this.config.wsUrl}${this.endpoints.WEBSOCKET}`;
-    return new WebSocket(wsUrl);
-  }
-
-  // ==================== CLEANUP ====================
-
-  destroy() {
-    if (this.healthCheckInterval) {
-      clearInterval(this.healthCheckInterval);
-      this.healthCheckInterval = null;
-    }
   }
 }
 
 // Export singleton instance
-export const apiService = new ApiService();
-export default apiService;
+export const apiService = new APIService();
 
-// Export types and utilities
-export type { BackendMode };
-export { getBackendConfig, checkBackendHealth };
+// Initialize authentication on module load
+apiService.initializeAuth();
+
+export default apiService;

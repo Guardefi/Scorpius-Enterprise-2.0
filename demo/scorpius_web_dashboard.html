@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Scorpius Enterprise 2.0 - Live Demo</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background: #000000;
+        color: #ffffff;
+        font-family: "JetBrains Mono", "Monaco", "Consolas", monospace;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background-image:
+          radial-gradient(
+            circle at 20% 80%,
+            rgba(0, 255, 255, 0.1) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 20%,
+            rgba(0, 255, 255, 0.05) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 40% 40%,
+            rgba(0, 255, 255, 0.03) 0%,
+            transparent 50%
+          );
+        background-attachment: fixed;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 3rem;
+        position: relative;
+      }
+
+      .logo h1 {
+        font-size: 3rem;
+        font-weight: 900;
+        background: linear-gradient(45deg, #ffffff, #00ffff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 1rem;
+        text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+      }
+
+      .tagline {
+        color: rgba(0, 255, 255, 0.8);
+        font-size: 1.2rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3em;
+        font-weight: 500;
+      }
+
+      .cyber-separator {
+        position: relative;
+        margin: 3rem 0;
+        height: 1px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.6),
+          transparent
+        );
+      }
+
+      .cyber-separator::after {
+        content: "";
+        position: absolute;
+        top: -1px;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(0, 255, 255, 0.3),
+          transparent
+        );
+        filter: blur(2px);
+      }
+
+      .metrics-bar {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 3rem;
+      }
+
+      .metric-card {
+        background:
+          radial-gradient(
+            circle at 50% 50%,
+            rgba(0, 255, 255, 0.05) 0%,
+            transparent 70%
+          ),
+          linear-gradient(
+            135deg,
+            rgba(0, 255, 255, 0.03) 0%,
+            rgba(0, 0, 0, 0.9) 100%
+          );
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 1.5rem;
+        text-align: center;
+        backdrop-filter: blur(20px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .metric-card:hover {
+        border-color: rgba(0, 255, 255, 0.4);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 255, 255, 0.15);
+      }
+
+      .metric-icon {
+        width: 24px;
+        height: 24px;
+        margin: 0 auto 0.5rem;
+        color: #00ffff;
+      }
+
+      .metric-value {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #00ffff;
+        margin-bottom: 0.5rem;
+      }
+
+      .metric-label {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .control-panel {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 3rem;
+        flex-wrap: wrap;
+      }
+
+      .demo-btn {
+        background: linear-gradient(45deg, #00ffff 0%, #0099cc 100%);
+        color: #000000;
+        border: 1px solid #00ffff;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(0, 255, 255, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .demo-btn:hover:not(:disabled) {
+        background: linear-gradient(45deg, #33ffff 0%, #00ccff 100%);
+        box-shadow: 0 6px 25px rgba(0, 255, 255, 0.5);
+        transform: translateY(-3px);
+      }
+
+      .demo-btn:disabled {
+        background: #666;
+        color: #999;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+      }
+
+      .demo-btn.secondary {
+        background: linear-gradient(
+          45deg,
+          rgba(0, 255, 255, 0.1) 0%,
+          rgba(0, 255, 255, 0.05) 100%
+        );
+        color: #00ffff;
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+      }
+
+      .demo-btn.secondary:hover:not(:disabled) {
+        background: linear-gradient(
+          45deg,
+          rgba(0, 255, 255, 0.2) 0%,
+          rgba(0, 255, 255, 0.1) 100%
+        );
+        border: 1px solid rgba(0, 255, 255, 0.6);
+        box-shadow:
+          0 0 20px rgba(0, 255, 255, 0.4),
+          inset 0 0 20px rgba(0, 255, 255, 0.1);
+      }
+
+      .demo-container {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 2rem;
+        min-height: 600px;
+      }
+
+      @media (max-width: 1024px) {
+        .demo-container {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .threat-feed,
+      .analytics-panel {
+        background:
+          radial-gradient(
+            circle at 50% 50%,
+            rgba(0, 255, 255, 0.05) 0%,
+            transparent 70%
+          ),
+          linear-gradient(
+            135deg,
+            rgba(0, 255, 255, 0.03) 0%,
+            rgba(0, 0, 0, 0.9) 100%
+          );
+        border: 1px solid rgba(0, 255, 255, 0.2);
+        border-radius: 12px;
+        padding: 2rem;
+        backdrop-filter: blur(20px);
+        overflow-y: auto;
+      }
+
+      .section-title {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #00ffff;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .status-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #00ffff;
+        animation: cyber-pulse 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+      }
+
+      @keyframes cyber-pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .threat-alert {
+        background: rgba(0, 0, 0, 0.4);
+        border-left: 4px solid;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        animation: slideIn 0.5s ease-out;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .threat-alert.critical {
+        border-left-color: #ff3838;
+        background: rgba(255, 56, 56, 0.1);
+        box-shadow: 0 0 20px rgba(255, 56, 56, 0.2);
+      }
+
+      .threat-alert.high {
+        border-left-color: #ff4757;
+        background: rgba(255, 71, 87, 0.1);
+      }
+
+      .threat-alert.medium {
+        border-left-color: #ffa502;
+        background: rgba(255, 165, 2, 0.1);
+      }
+
+      .threat-alert.low {
+        border-left-color: #2ed573;
+        background: rgba(46, 213, 115, 0.1);
+      }
+
+      .alert-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+      }
+
+      .alert-title {
+        font-weight: bold;
+        color: #ffffff;
+        font-size: 1.1rem;
+      }
+
+      .alert-badges {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+
+      .alert-severity,
+      .alert-status {
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+
+      .alert-severity.critical {
+        background: #ff3838;
+        color: white;
+      }
+      .alert-severity.high {
+        background: #ff4757;
+        color: white;
+      }
+      .alert-severity.medium {
+        background: #ffa502;
+        color: black;
+      }
+      .alert-severity.low {
+        background: #2ed573;
+        color: black;
+      }
+
+      .alert-status.mitigated {
+        background: #00ffff;
+        color: black;
+      }
+      .alert-status.detected {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+
+      .alert-details {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 0.9rem;
+        line-height: 1.5;
+        margin-bottom: 1rem;
+      }
+
+      .alert-details strong {
+        color: #00ffff;
+      }
+
+      .confidence-bar {
+        background: rgba(255, 255, 255, 0.1);
+        height: 6px;
+        border-radius: 3px;
+        margin: 1rem 0;
+        overflow: hidden;
+      }
+
+      .confidence-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #ff4757, #00ffff);
+        transition: width 0.3s ease;
+      }
+
+      .mitigation-notice {
+        margin-top: 1rem;
+        padding: 0.75rem;
+        background: rgba(0, 255, 255, 0.1);
+        border: 1px solid rgba(0, 255, 255, 0.3);
+        border-radius: 6px;
+        font-size: 0.8rem;
+        color: #00ffff;
+      }
+
+      .chart-placeholder {
+        background: rgba(0, 255, 255, 0.05);
+        border: 2px dashed rgba(0, 255, 255, 0.3);
+        height: 200px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin: 1.5rem 0;
+        color: #00ffff;
+        font-size: 0.9rem;
+      }
+
+      .chart-placeholder svg {
+        width: 2rem;
+        height: 2rem;
+        margin-bottom: 0.5rem;
+        animation: cyber-pulse 2s infinite;
+      }
+
+      .stats-section {
+        margin-bottom: 2rem;
+      }
+
+      .stats-title {
+        font-weight: bold;
+        color: #00ffff;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+      }
+
+      .stats-list {
+        space-y: 0.5rem;
+      }
+
+      .stats-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0;
+        font-size: 0.9rem;
+      }
+
+      .network-status {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .network-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #00ffff;
+      }
+
+      .footer {
+        text-align: center;
+        padding: 2rem 0;
+        color: rgba(255, 255, 255, 0.5);
+        border-top: 1px solid rgba(0, 255, 255, 0.2);
+        margin-top: 3rem;
+        font-size: 0.9rem;
+      }
+
+      .welcome-message {
+        text-align: center;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 3rem;
+        font-size: 1rem;
+      }
+
+      /* Enhanced scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(90deg, #00ffff, #0099cc);
+        border-radius: 3px;
+        box-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(90deg, #33ffff, #00ccff);
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <div class="logo">
+          <h1>🛡️ SCORPIUS ENTERPRISE 2.0</h1>
+        </div>
+        <div class="tagline">
+          Next-Generation Blockchain Security & Intelligence Platform
+        </div>
+      </div>
+
+      <div class="cyber-separator"></div>
+
+      <div class="metrics-bar">
+        <div class="metric-card">
+          <svg class="metric-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V6.5C15 4.57 13.43 3 11.5 3S8 4.57 8 6.5V7.5L2 7V9L8 8.5V15L2 15V17L8 16.5V20C8 20.55 8.45 21 9 21H15C15.55 21 16 20.55 16 20V16.5L22 17V15L16 15V8.5L22 9Z"
+            />
+          </svg>
+          <div class="metric-value" id="assetsProtected">$2.847B</div>
+          <div class="metric-label">Assets Protected</div>
+        </div>
+        <div class="metric-card">
+          <svg class="metric-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11H16V18H8V11H9.2V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.4,8.7 10.4,10V11H13.6V10C13.6,8.7 12.8,8.2 12,8.2Z"
+            />
+          </svg>
+          <div class="metric-value" id="threatsDetected">12,847</div>
+          <div class="metric-label">Threats Detected</div>
+        </div>
+        <div class="metric-card">
+          <svg class="metric-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"
+            />
+          </svg>
+          <div class="metric-value" id="accuracy">99.97%</div>
+          <div class="metric-label">Detection Accuracy</div>
+        </div>
+        <div class="metric-card">
+          <svg class="metric-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M13,2.05L13.13,2.1L18.13,4.1C18.36,4.18 18.5,4.4 18.5,4.65V9.65C18.5,13.36 16.35,16.82 13,17.95C9.65,16.82 7.5,13.36 7.5,9.65V4.65C7.5,4.4 7.64,4.18 7.87,4.1L12.87,2.1L13,2.05M11,6V8H13V6H11M11,10V16H13V10H11Z"
+            />
+          </svg>
+          <div class="metric-value" id="responseTime">47ms</div>
+          <div class="metric-label">Response Time</div>
+        </div>
+        <div class="metric-card">
+          <svg class="metric-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path
+              d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"
+            />
+          </svg>
+          <div class="metric-value" id="uptime">99.99%</div>
+          <div class="metric-label">System Uptime</div>
+        </div>
+      </div>
+
+      <div class="control-panel">
+        <button class="demo-btn" onclick="startDemo()" id="startBtn">
+          ▶️ Start Live Demo
+        </button>
+        <button
+          class="demo-btn secondary"
+          onclick="stopDemo()"
+          id="stopBtn"
+          disabled
+        >
+          ⏹️ Stop Demo
+        </button>
+        <button class="demo-btn secondary" onclick="clearAlerts()">
+          🗑️ Clear Alerts
+        </button>
+      </div>
+
+      <div class="demo-container">
+        <div class="threat-feed">
+          <h2 class="section-title">
+            <span class="status-indicator"></span>
+            Live Threat Detection Feed
+          </h2>
+          <div id="threatFeed">
+            <div class="welcome-message">
+              Click "Start Live Demo" to begin real-time threat monitoring...
+            </div>
+          </div>
+        </div>
+
+        <div class="analytics-panel">
+          <h2 class="section-title">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22,21H2V3H4V19H6V10H10V19H12V6H16V19H18V14H22V21Z" />
+            </svg>
+            Real-Time Analytics
+          </h2>
+
+          <div class="chart-placeholder">
+            <svg fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M16,11.78L20.24,4.45L21.97,5.45L16.74,14.5L10.23,10.75L5.46,19H22V21H2V3H4V17.54L9.5,8L16,11.78Z"
+              />
+            </svg>
+            <div>Threat Detection Chart</div>
+            <div style="font-size: 0.8rem; opacity: 0.7">
+              (Live data visualization)
+            </div>
+          </div>
+
+          <div class="stats-section">
+            <h3 class="stats-title">Top Threat Types Today</h3>
+            <div class="stats-list">
+              <div class="stats-item">
+                <span>🎯 MEV Attacks</span>
+                <span style="color: #00ffff">34%</span>
+              </div>
+              <div class="stats-item">
+                <span>🥪 Sandwich Attacks</span>
+                <span style="color: #00ffff">28%</span>
+              </div>
+              <div class="stats-item">
+                <span>🍯 Honeypot Contracts</span>
+                <span style="color: #00ffff">19%</span>
+              </div>
+              <div class="stats-item">
+                <span>⚡ Flash Loan Attacks</span>
+                <span style="color: #00ffff">12%</span>
+              </div>
+              <div class="stats-item">
+                <span>🔑 Key Compromises</span>
+                <span style="color: #00ffff">7%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-section">
+            <h3 class="stats-title">Protected Networks</h3>
+            <div class="stats-list">
+              <div class="stats-item">
+                <div class="network-status">
+                  <div class="network-dot"></div>
+                  <span>Ethereum Mainnet</span>
+                </div>
+                <span style="color: #00ffff">✅</span>
+              </div>
+              <div class="stats-item">
+                <div class="network-status">
+                  <div class="network-dot"></div>
+                  <span>Polygon</span>
+                </div>
+                <span style="color: #00ffff">✅</span>
+              </div>
+              <div class="stats-item">
+                <div class="network-status">
+                  <div class="network-dot"></div>
+                  <span>Binance Smart Chain</span>
+                </div>
+                <span style="color: #00ffff">✅</span>
+              </div>
+              <div class="stats-item">
+                <div class="network-status">
+                  <div class="network-dot"></div>
+                  <span>Arbitrum</span>
+                </div>
+                <span style="color: #00ffff">✅</span>
+              </div>
+              <div class="stats-item">
+                <div class="network-status">
+                  <div class="network-dot"></div>
+                  <span>Optimism</span>
+                </div>
+                <span style="color: #00ffff">✅</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer">
+        <p>
+          © 2025 Guardefi - Scorpius Enterprise 2.0 | Enterprise-grade
+          blockchain security platform
+        </p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem">
+          📞 Contact Sales: enterprise@scorpius.security | 🌐 Demo:
+          https://demo.scorpius.enterprise
+        </p>
+      </div>
+    </div>
+
+    <script>
+      let demoRunning = false;
+      let demoTimeout;
+      let threatCount = 12847;
+      let assetsProtected = 2847000000;
+
+      const threatTypes = [
+        {
+          type: "MEV_ATTACK",
+          severity: "HIGH",
+          description:
+            "Advanced MEV bot detected attempting arbitrage manipulation",
+        },
+        {
+          type: "SANDWICH_ATTACK",
+          severity: "CRITICAL",
+          description:
+            "Sophisticated sandwich attack targeting large swap transaction",
+        },
+        {
+          type: "HONEYPOT_CONTRACT",
+          severity: "HIGH",
+          description:
+            "Malicious contract with hidden transfer restrictions detected",
+        },
+        {
+          type: "FLASH_LOAN_ATTACK",
+          severity: "CRITICAL",
+          description: "Multi-protocol flash loan attack vector identified",
+        },
+        {
+          type: "PRIVATE_KEY_COMPROMISE",
+          severity: "CRITICAL",
+          description: "Wallet private key potentially compromised",
+        },
+        {
+          type: "FRONT_RUNNING",
+          severity: "MEDIUM",
+          description: "Front-running attack pattern detected in mempool",
+        },
+        {
+          type: "RUG_PULL",
+          severity: "HIGH",
+          description: "Potential rug pull detected in new token contract",
+        },
+      ];
+
+      function generateThreatAlert() {
+        const threat =
+          threatTypes[Math.floor(Math.random() * threatTypes.length)];
+        const confidence = 85 + Math.random() * 14;
+        const impact = Math.floor(Math.random() * 5000000) + 10000;
+        const alertId = `SCORPIUS-${Math.floor(Math.random() * 900000) + 100000}`;
+
+        return {
+          id: alertId,
+          type: threat.type,
+          severity: threat.severity,
+          description: threat.description,
+          confidence: confidence,
+          impact: impact,
+          timestamp: new Date(),
+          address: generateAddress(),
+          txHash: generateTxHash(),
+          status: "DETECTED",
+        };
+      }
+
+      function generateAddress() {
+        return (
+          "0x" +
+          Array.from({ length: 40 }, () =>
+            Math.floor(Math.random() * 16).toString(16),
+          ).join("")
+        );
+      }
+
+      function generateTxHash() {
+        return (
+          "0x" +
+          Array.from({ length: 64 }, () =>
+            Math.floor(Math.random() * 16).toString(16),
+          ).join("")
+        );
+      }
+
+      function addThreatAlert(alert) {
+        const feedElement = document.getElementById("threatFeed");
+
+        const alertElement = document.createElement("div");
+        alertElement.className = `threat-alert ${alert.severity.toLowerCase()}`;
+        alertElement.id = `alert-${alert.id}`;
+
+        const severityEmoji = {
+          CRITICAL: "🚨",
+          HIGH: "⚠️",
+          MEDIUM: "🟡",
+          LOW: "🟢",
+        };
+
+        alertElement.innerHTML = `
+                <div class="alert-header">
+                    <div class="alert-title">${severityEmoji[alert.severity]} ${alert.type.replace(/_/g, " ")}</div>
+                    <div class="alert-badges">
+                        <div class="alert-severity ${alert.severity.toLowerCase()}">${alert.severity}</div>
+                        <div class="alert-status ${alert.status.toLowerCase()}">${alert.status}</div>
+                    </div>
+                </div>
+                <div class="alert-details">
+                    <strong>Alert ID:</strong> ${alert.id}<br>
+                    <strong>Description:</strong> ${alert.description}<br>
+                    <strong>Target:</strong> ${alert.address.substring(0, 20)}...<br>
+                    <strong>Potential Loss:</strong> $${alert.impact.toLocaleString()}<br>
+                    <strong>Transaction:</strong> ${alert.txHash.substring(0, 20)}...<br>
+                    <strong>Time:</strong> ${alert.timestamp.toLocaleTimeString()}
+                </div>
+                <div class="confidence-bar">
+                    <div class="confidence-fill" style="width: ${alert.confidence}%"></div>
+                </div>
+                <div style="font-size: 0.8rem; color: #00ffff; margin-top: 0.5rem;">
+                    Confidence: ${alert.confidence.toFixed(1)}%
+                </div>
+            `;
+
+        // Clear welcome message if present
+        if (feedElement.querySelector(".welcome-message")) {
+          feedElement.innerHTML = "";
+        }
+
+        feedElement.insertBefore(alertElement, feedElement.firstChild);
+
+        // Keep only last 10 alerts
+        while (feedElement.children.length > 10) {
+          feedElement.removeChild(feedElement.lastChild);
+        }
+
+        // Update metrics
+        threatCount++;
+        assetsProtected += alert.impact;
+        document.getElementById("threatsDetected").textContent =
+          threatCount.toLocaleString();
+        document.getElementById("assetsProtected").textContent =
+          "$" + (assetsProtected / 1000000000).toFixed(3) + "B";
+
+        // Auto-mitigate after 5 seconds
+        setTimeout(() => {
+          const alertEl = document.getElementById(`alert-${alert.id}`);
+          if (alertEl) {
+            const statusBadge = alertEl.querySelector(".alert-status");
+            statusBadge.textContent = "MITIGATED";
+            statusBadge.className = "alert-status mitigated";
+
+            const mitigationNotice = document.createElement("div");
+            mitigationNotice.className = "mitigation-notice";
+            mitigationNotice.innerHTML = "✅ AUTOMATED MITIGATION ACTIVATED";
+            alertEl.appendChild(mitigationNotice);
+          }
+        }, 5000);
+      }
+
+      function startDemo() {
+        if (demoRunning) return;
+
+        demoRunning = true;
+        document.getElementById("startBtn").disabled = true;
+        document.getElementById("stopBtn").disabled = false;
+
+        function generateNextThreat() {
+          if (demoRunning) {
+            const alert = generateThreatAlert();
+            addThreatAlert(alert);
+
+            const nextInterval = 3000 + Math.random() * 5000; // 3-8 seconds
+            demoTimeout = setTimeout(generateNextThreat, nextInterval);
+          }
+        }
+
+        // Start first threat after 2 seconds
+        demoTimeout = setTimeout(generateNextThreat, 2000);
+      }
+
+      function stopDemo() {
+        demoRunning = false;
+        if (demoTimeout) {
+          clearTimeout(demoTimeout);
+        }
+        document.getElementById("startBtn").disabled = false;
+        document.getElementById("stopBtn").disabled = true;
+      }
+
+      function clearAlerts() {
+        document.getElementById("threatFeed").innerHTML = `
+                <div class="welcome-message">
+                    Threat feed cleared. Click "Start Live Demo" to resume monitoring...
+                </div>
+            `;
+      }
+
+      // Update real-time elements
+      setInterval(() => {
+        // Update any relative timestamps if needed
+        const alerts = document.querySelectorAll(".threat-alert");
+        // Could add relative time updates here
+      }, 1000);
+    </script>
+  </body>
+</html>

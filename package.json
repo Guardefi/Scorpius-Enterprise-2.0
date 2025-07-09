@@ -1,21 +1,27 @@
 {
-  "name": "scorpius-full-stack",
-  "version": "1.4.0",
-  "description": "Scorpius integrated microservices with monitoring and custom dashboard",
+  "name": "scorpius-enterprise-demo",
+  "version": "2.0.0",
+  "description": "Scorpius Enterprise 2.0 - Public Demo & Showcase Platform",
+  "keywords": ["blockchain", "security", "enterprise", "demo", "cybersecurity"],
   "scripts": {
-    "start": "docker-compose up --build",
-    "dev": "docker-compose up --build -d && npm run frontend:dev",
-    "stop": "docker-compose down",
-    "monitor": "docker-compose up prometheus grafana -d",
-    "frontend:dev": "cd frontend && npm run dev",
-    "electron:dev": "cd electron && npm run dev",
-    "build": "docker-compose build",
-    "logs": "docker-compose logs -f"
+    "demo": "python demo/launch_demo.py",
+    "demo:web": "python -m http.server 8080 --directory demo",
+    "demo:docker": "docker-compose up -d",
+    "demo:stop": "docker-compose down",
+    "verify": "powershell -ExecutionPolicy Bypass -File verify-platform.ps1"
   },
-  "devDependencies": {
-    "concurrently": "^8.2.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/YourOrg/scorpius-enterprise-demo"
   },
-  "dependencies": {
-    "lucide-react": "^0.525.0"
+  "author": "Guardefi - Scorpius Enterprise",
+  "license": "MIT",
+  "homepage": "https://demo.scorpius.enterprise",
+  "bugs": {
+    "url": "mailto:enterprise@scorpius.security"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "python": ">=3.8.0"
   }
 }

@@ -514,7 +514,10 @@
           <h1>🛡️ SCORPIUS ENTERPRISE 2.0</h1>
         </div>
         <div class="tagline">
-          Next-Generation Blockchain Security & Intelligence Platform
+          DEMONSTRATION PLATFORM - Blockchain Security Capabilities Showcase
+        </div>
+        <div style="background: rgba(255, 165, 2, 0.1); border: 1px solid rgba(255, 165, 2, 0.3); padding: 1rem; border-radius: 8px; margin-top: 1rem; font-size: 0.9rem; color: #ffa502;">
+          ⚠️ <strong>Demo Notice:</strong> This is a simulation showcasing Scorpius platform capabilities. All data and threats shown are simulated for demonstration purposes only.
         </div>
       </div>
 
@@ -527,7 +530,7 @@
               d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 7.5V6.5C15 4.57 13.43 3 11.5 3S8 4.57 8 6.5V7.5L2 7V9L8 8.5V15L2 15V17L8 16.5V20C8 20.55 8.45 21 9 21H15C15.55 21 16 20.55 16 20V16.5L22 17V15L16 15V8.5L22 9Z"
             />
           </svg>
-          <div class="metric-value" id="assetsProtected">$2.847B</div>
+          <div class="metric-value" id="assetsProtected">Demo Mode</div>
           <div class="metric-label">Assets Protected</div>
         </div>
         <div class="metric-card">
@@ -536,7 +539,7 @@
               d="M12,1L3,5V11C3,16.55 6.84,21.74 12,23C17.16,21.74 21,16.55 21,11V5L12,1M12,7C13.4,7 14.8,8.6 14.8,10V11H16V18H8V11H9.2V10C9.2,8.6 10.6,7 12,7M12,8.2C11.2,8.2 10.4,8.7 10.4,10V11H13.6V10C13.6,8.7 12.8,8.2 12,8.2Z"
             />
           </svg>
-          <div class="metric-value" id="threatsDetected">12,847</div>
+          <div class="metric-value" id="threatsDetected">Simulated</div>
           <div class="metric-label">Threats Detected</div>
         </div>
         <div class="metric-card">
@@ -545,7 +548,7 @@
               d="M12,2A3,3 0 0,1 15,5V11A3,3 0 0,1 12,14A3,3 0 0,1 9,11V5A3,3 0 0,1 12,2M19,11C19,14.53 16.39,17.44 13,17.93V21H11V17.93C7.61,17.44 5,14.53 5,11H7A5,5 0 0,0 12,16A5,5 0 0,0 17,11H19Z"
             />
           </svg>
-          <div class="metric-value" id="accuracy">99.97%</div>
+          <div class="metric-value" id="accuracy">Enterprise</div>
           <div class="metric-label">Detection Accuracy</div>
         </div>
         <div class="metric-card">
@@ -554,7 +557,7 @@
               d="M13,2.05L13.13,2.1L18.13,4.1C18.36,4.18 18.5,4.4 18.5,4.65V9.65C18.5,13.36 16.35,16.82 13,17.95C9.65,16.82 7.5,13.36 7.5,9.65V4.65C7.5,4.4 7.64,4.18 7.87,4.1L12.87,2.1L13,2.05M11,6V8H13V6H11M11,10V16H13V10H11Z"
             />
           </svg>
-          <div class="metric-value" id="responseTime">47ms</div>
+          <div class="metric-value" id="responseTime">Real-time</div>
           <div class="metric-label">Response Time</div>
         </div>
         <div class="metric-card">
@@ -563,7 +566,7 @@
               d="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10,10 0 0,0 12,2M12,4A8,8 0 0,1 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12A6,6 0 0,0 12,6M12,8A4,4 0 0,1 16,12A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8Z"
             />
           </svg>
-          <div class="metric-value" id="uptime">99.99%</div>
+          <div class="metric-value" id="uptime">Platform</div>
           <div class="metric-label">System Uptime</div>
         </div>
       </div>
@@ -689,12 +692,11 @@
 
       <div class="footer">
         <p>
-          © 2025 Guardefi - Scorpius Enterprise 2.0 | Enterprise-grade
-          blockchain security platform
+          © 2025 Scorpius Enterprise - Advanced Blockchain Security Platform
         </p>
         <p style="margin-top: 0.5rem; font-size: 0.8rem">
-          📞 Contact Sales: enterprise@scorpius.security | 🌐 Demo:
-          https://demo.scorpius.enterprise
+          📞 Contact CEO: security@scorpius.live | 🌐 Website:
+          http://scorpius.live | 🆘 Support: help@scorpius.live
         </p>
       </div>
     </div>
@@ -702,8 +704,8 @@
     <script>
       let demoRunning = false;
       let demoTimeout;
-      let threatCount = 12847;
-      let assetsProtected = 2847000000;
+      let threatCount = 0;
+      let demoStartTime = new Date();
 
       const threatTypes = [
         {
@@ -835,13 +837,11 @@
           feedElement.removeChild(feedElement.lastChild);
         }
 
-        // Update metrics
+        // Update metrics with demo values
         threatCount++;
-        assetsProtected += alert.impact;
-        document.getElementById("threatsDetected").textContent =
-          threatCount.toLocaleString();
-        document.getElementById("assetsProtected").textContent =
-          "$" + (assetsProtected / 1000000000).toFixed(3) + "B";
+        const timeRunning = Math.floor((new Date() - demoStartTime) / 1000);
+        document.getElementById("threatsDetected").textContent = `${threatCount} Simulated`;
+        document.getElementById("assetsProtected").textContent = `Demo Active: ${timeRunning}s`;
 
         // Auto-mitigate after 5 seconds
         setTimeout(() => {

@@ -1,3 +1,0 @@
-"""
-Backend Middleware Package
-"""

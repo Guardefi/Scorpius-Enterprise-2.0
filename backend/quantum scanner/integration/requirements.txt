@@ -1,3 +1,0 @@
-# Integration Requirements for Scorpius Client
-aiohttp>=3.8.0
-asyncio-timeout>=4.0.0

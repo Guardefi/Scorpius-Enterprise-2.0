@@ -1,2 +1,0 @@
-# graphql_writer.py
-

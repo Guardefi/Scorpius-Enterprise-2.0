@@ -1,1 +1,0 @@
-../../javascript/inherits/inherits_browser.js

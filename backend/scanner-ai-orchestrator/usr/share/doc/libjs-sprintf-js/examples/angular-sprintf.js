@@ -1,1 +1,0 @@
-../../../javascript/sprintf-js/angular-sprintf.js

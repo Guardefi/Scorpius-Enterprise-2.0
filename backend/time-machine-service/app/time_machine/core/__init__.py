@@ -1,3 +1,0 @@
-"""
-Core Time Machine module.
-"""
